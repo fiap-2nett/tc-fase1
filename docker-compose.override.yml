@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  tc.db:
+    volumes:
+      - ./.containers/sqlserver:/var/opt/mssql/data
+    ports:
+      - "5433:1433"
+    networks:
+      - tc
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=yourStrong(!)Password
+
+  tc.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+networks:
+  tc:
+    driver: bridge

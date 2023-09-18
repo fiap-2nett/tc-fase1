@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  tc.db:
+      image: mcr.microsoft.com/mssql/server:2019-latest
+
+  tc.api:
+    image: ${DOCKER_REGISTRY-}techchallengeapi
+    build:
+      context: .
+      dockerfile: src/TechChallenge.Api/Dockerfile
