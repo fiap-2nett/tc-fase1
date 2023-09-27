@@ -59,7 +59,7 @@ namespace TechChallenge.Application.Services
                 throw new DomainException(DomainErrors.User.DuplicateEmail);
 
             var passwordHash = _passwordHasher.HashPassword(Password.Create(password));
-            var user = new User(name, surname, emailResult, UserRoles.User, passwordHash);
+            var user = new User(name, surname, emailResult, UserRoles.General, passwordHash);
 
             _userRepository.Insert(user);
             await _unitOfWork.SaveChangesAsync();

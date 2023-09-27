@@ -50,11 +50,11 @@ namespace TechChallenge.Persistence.Configurations
             var users = new List<(int Id, string Name, string Surname, Email Email, UserRoles Role, Password Password)>()
             {
                 new (10_000, "Administrador",   "(built-in)",   Email.Create("admin@techchallenge.app"),    UserRoles.Administrator,    Password.Create("Admin@123")),
-                new (10_001, "Ailton",          "(built-in)",   Email.Create("ailton@techchallenge.app"),   UserRoles.User,             Password.Create("Ailton@123")),
+                new (10_001, "Ailton",          "(built-in)",   Email.Create("ailton@techchallenge.app"),   UserRoles.General,             Password.Create("Ailton@123")),
                 new (10_002, "Bruno",           "(built-in)",   Email.Create("bruno@techchallenge.app"),    UserRoles.Analyst,          Password.Create("Bruno@123")),
-                new (10_003, "Cecília",         "(built-in)",   Email.Create("cecilia@techchallenge.app"),  UserRoles.User,             Password.Create("Cecilia@123")),
+                new (10_003, "Cecília",         "(built-in)",   Email.Create("cecilia@techchallenge.app"),  UserRoles.General,             Password.Create("Cecilia@123")),
                 new (10_004, "Cesar",           "(built-in)",   Email.Create("cesar@techchallenge.app"),    UserRoles.Analyst,          Password.Create("Cesar@123")),
-                new (10_005, "Paulo",           "(built-in)",   Email.Create("paulo@techchallenge.app"),    UserRoles.User,             Password.Create("Paulo@123")),
+                new (10_005, "Paulo",           "(built-in)",   Email.Create("paulo@techchallenge.app"),    UserRoles.General,             Password.Create("Paulo@123")),
             };
 
             builder.HasData(users.Select(user => new
