@@ -16,13 +16,18 @@ namespace TechChallenge.Api.Contracts
             public const string ChangePassword = "users/me/change-password";
         }
 
+        public static class Category
+        {
+            public const string Get = "category";
+            public const string GetbyId = "category/{idCategory:int}";
+        }
+
         public static class Tickets
         {
             public const string GetAllTickets = "tickets/get/all";
             public const string GetByIdTickets = "tickets/get/by-id-detailed";
             public const string CreateTicket = "tickets/create";
             public const string AssigneTicket = "tickets/assigne";
-
         }
     }
 }
