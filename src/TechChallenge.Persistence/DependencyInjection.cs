@@ -21,6 +21,7 @@ namespace TechChallenge.Persistence
             services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<EFContext>());
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
 
             return services;
         }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TechChallenge.Domain.Entities;
+using TechChallenge.Domain.Enumerations;
 
 namespace TechChallenge.Persistence.Configurations
 {
