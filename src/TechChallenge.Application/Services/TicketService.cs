@@ -177,23 +177,8 @@ internal sealed class TicketService : ITicketService
         IQueryable<TicketResponse> ticketsQuery;
 
 
-        if (user.IdRole == ((int)UserRoles.Administrator))
-        {
-            ticketsQuery = TicketsQuery((int)UserRoles.Administrator, user.Id);
-        }
-
-        else if (user.IdRole == ((int)UserRoles.Analyst))
-        {
-            ticketsQuery = TicketsQuery((int)UserRoles.Analyst, user.Id);
-        }
-
-        else
-
-        {
-            ticketsQuery = TicketsQuery((int)UserRoles.General, user.Id);
-        }
-
-
+        ticketsQuery = TicketsQuery(user.IdRole, user.Id);
+        
         var totalCount = await ticketsQuery.CountAsync();
 
         var ticketsReponsePage = await ticketsQuery
