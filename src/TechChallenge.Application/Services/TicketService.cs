@@ -124,25 +124,8 @@ internal sealed class TicketService : ITicketService
         var user = await _userRepository.GetByIdAsync(idUser);
         IQueryable<DetailedTicketResponse> ticketsQuery;
 
-        if (user.IdRole == ((int)UserRoles.Administrator))
-        {
-            ticketsQuery = TicketsQueryDetailed((int)UserRoles.Administrator, user.Id, idTicket);
-        }
-
-        else if (user.IdRole == ((int)UserRoles.Analyst))
-        {
-            ticketsQuery = TicketsQueryDetailed((int)UserRoles.Analyst, user.Id, idTicket);
-        }
-
-        else
-
-        {
-            ticketsQuery = TicketsQueryDetailed((int)UserRoles.General, user.Id, idTicket);
-        }
-
-        if (!ticketsQuery.Any())
-            throw new DomainException(TicketError.NotFoundError);
-
+        ticketsQuery = TicketsQueryDetailed(user.IdRole, user.Id, idTicket);
+       
         return await ticketsQuery.SingleOrDefaultAsync();
     }
 
