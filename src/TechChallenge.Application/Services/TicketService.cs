@@ -1,26 +1,21 @@
 using System;
 using System.Data;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
-using TechChallenge.Application.Contracts.Authentication;
 using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Contracts.Tickets;
-using TechChallenge.Application.Contracts.Users;
 using TechChallenge.Application.Core.Abstractions.Authentication;
 using TechChallenge.Application.Core.Abstractions.Cryptography;
 using TechChallenge.Application.Core.Abstractions.Data;
 using TechChallenge.Application.Core.Abstractions.Services;
 using TechChallenge.Domain.Entities;
 using TechChallenge.Domain.Enumerations;
-using TechChallenge.Domain.Errors;
 using TechChallenge.Domain.Exceptions;
 using TechChallenge.Domain.Extensions;
 using TechChallenge.Domain.Repositories;
 using static TechChallenge.Domain.Errors.DomainErrors;
+
 
 namespace TechChallenge.Application.Services;
 
@@ -60,17 +55,22 @@ internal sealed class TicketService : ITicketService
     #endregion
 
     #region ITicketService Members
-    public async Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket)
+
+
+    public IQueryable<DetailedTicketResponse> TicketsQueryDetailed(int idUserRole, int idUser, int idTicket)
     {
-        var ticketQuery = (
+       
+        
+        IQueryable<DetailedTicketResponse>  ticketsQuery = (
                 from tickets in _dbContext.Set<Ticket, int>().AsNoTracking()
-                    where tickets.Id == idTicket
+                where tickets.Id == idTicket
                 join status in _dbContext.Set<TicketStatus, byte>().AsNoTracking()
                     on tickets.IdStatus equals status.Id
                 where tickets.IdStatus == status.Id
                 join category in _dbContext.Set<Category, int>().AsNoTracking()
                     on tickets.IdCategory equals category.Id
                 where tickets.IdCategory == category.Id
+
                 select new DetailedTicketResponse
                 {
                     IdTicked = tickets.Id,
@@ -83,20 +83,75 @@ internal sealed class TicketService : ITicketService
                     LastUpdatedAt = tickets.LastUpdatedAt,
                     LastUpdatedBy = tickets.LastUpdatedBy,
                     CancellationReason = tickets.CancellationReason
-
                 }
             );
 
-        return await ticketQuery.SingleOrDefaultAsync();
+
+        if (!ticketsQuery.Any())
+        {
+            throw new DomainException(TicketError.NotFoundError);
+        }
+
+        else if (idUserRole == 2)
+        {
+            ticketsQuery = from tickets in ticketsQuery
+                            where tickets.IdUserRequester == idUser
+                            select tickets;
+            if (!ticketsQuery.Any())
+            {
+                throw new DomainException(TicketError.InvalidPermissions);
+            }
+        
+        }
+
+        else if (idUserRole == 3)
+        {
+            ticketsQuery = from tickets in ticketsQuery
+                            where tickets.IdUserRequester == idUser || tickets.IdUserAssigned == idUser
+                            select tickets;
+            if (!ticketsQuery.Any())
+            {
+                throw new DomainException(TicketError.InvalidPermissions);
+            }
+
+        }
+
+        return ticketsQuery;
     }
+
+    public async Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket, int idUser)
+    {
+        var user = await _userRepository.GetByIdAsync(idUser);
+        IQueryable<DetailedTicketResponse> ticketsQuery;
+
+        if (user.IdRole == ((int)UserRoles.Administrator))
+        {
+            ticketsQuery = TicketsQueryDetailed((int)UserRoles.Administrator, user.Id, idTicket);
+        }
+
+        else if (user.IdRole == ((int)UserRoles.Analyst))
+        {
+            ticketsQuery = TicketsQueryDetailed((int)UserRoles.Analyst, user.Id, idTicket);
+        }
+
+        else
+
+        {
+            ticketsQuery = TicketsQueryDetailed((int)UserRoles.General, user.Id, idTicket);
+        }
+
+        if (!ticketsQuery.Any())
+            throw new DomainException(TicketError.NotFoundError);
+
+        return await ticketsQuery.SingleOrDefaultAsync();
+    }
+
     public async Task<string> AssignToUserAsync(int idTicket, int idAssignedUser)
     {
 
         var ticket = await _ticketRepository.GetByIdAsync(idTicket);
         if (ticket is null)
-            throw new DomainException(TicketError.NotFound);
-
-
+            throw new DomainException(TicketError.NotFoundError);
         
         ticket.AssigneUser(idTicket, idAssignedUser);
         await _unitOfWork.SaveChangesAsync();
@@ -126,8 +181,7 @@ internal sealed class TicketService : ITicketService
         return $"Ticket {ticket.Id} criado com sucesso.";
     }
 
-
-    public IQueryable<TicketResponse> TicketsQuery(int idUserRole, int idUser)
+    public IQueryable<TicketResponse> TicketsQueryAll(int idUserRole, int idUser)
     {
         IQueryable<TicketResponse> ticketsQuery = (
                 from tickets in _dbContext.Set<Ticket, int>().AsNoTracking()
@@ -179,18 +233,18 @@ internal sealed class TicketService : ITicketService
 
         if (user.IdRole == ((int)UserRoles.Administrator))
         {
-            ticketsQuery = TicketsQuery((int)UserRoles.Administrator, user.Id);
+            ticketsQuery = TicketsQueryAll((int)UserRoles.Administrator, user.Id);
         }
 
         else if (user.IdRole == ((int)UserRoles.Analyst))
         {
-            ticketsQuery = TicketsQuery((int)UserRoles.Analyst, user.Id);
+            ticketsQuery = TicketsQueryAll((int)UserRoles.Analyst, user.Id);
         }
 
         else
 
         {
-            ticketsQuery = TicketsQuery((int)UserRoles.General, user.Id);
+            ticketsQuery = TicketsQueryAll((int)UserRoles.General, user.Id);
         }
 
 
