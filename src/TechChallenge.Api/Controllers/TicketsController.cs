@@ -8,16 +8,11 @@ using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Contracts.Tickets;
 using TechChallenge.Application.Core.Abstractions.Authentication;
 using TechChallenge.Application.Core.Abstractions.Services;
-using TechChallenge.Application.Contracts.Authentication;
-using TechChallenge.Domain.Entities;
-using TechChallenge.Domain.Enumerations;
-using System.Linq;
-using System.Reflection.Metadata;
-using TechChallenge.Persistence;
-using TechChallenge.Application.Contracts.Users;
-using static TechChallenge.Domain.Errors.DomainErrors;
+using TechChallenge.Domain.Repositories;
 using TechChallenge.Domain.Exceptions;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TechChallenge.Domain.Errors;
+using static TechChallenge.Domain.Errors.DomainErrors;
 
 namespace TechChallenge.Api.Controllers;
 
@@ -67,14 +62,29 @@ public sealed class TicketsController : ApiController
     /// <returns>The detailed  ticket info.</returns>
     [Consumes("application/json")]
     [Produces("application/json")]
-    
+
     [HttpGet(ApiRoutes.Tickets.GetByIdTickets)]
     [ProducesResponseType(typeof(DetailedTicketResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetDetailed(int idTicket)
     {
-        var response = await _ticketService.GetTicketByIdAsync(idTicket);
-        return Ok(response);
+        try
+        {
+            var response = await _ticketService.GetTicketByIdAsync(idTicket, _userSessionProvider.IdUser);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "The ticket with the specified identifier was not found.")
+            {
+                return NotFound(ex.Message);
+            }
+            else
+            {
+                return StatusCode(403, ex.Message.ToString());
+            }
+        }
     }
 
     [HttpPost(ApiRoutes.Tickets.CreateTicket)]

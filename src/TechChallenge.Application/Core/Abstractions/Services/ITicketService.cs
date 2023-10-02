@@ -11,7 +11,7 @@ public interface ITicketService
 
     #region ITicketService Members
 
-    Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket);
+    Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket, int idUser);
     Task<PagedList<TicketResponse>> GetTicketAsync(GetTicketsRequest request, int idUser);
     Task<string> CreateTicketAsync(int idCompany, int idCategory, int idUserRequester, string description);
     Task UpdateTicketAsync(int idTicket, int idCategory, string description);
