@@ -12,6 +12,7 @@ namespace TechChallenge.Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ITicketStatusService, TicketStatusService>();
 
             return services;
         }
