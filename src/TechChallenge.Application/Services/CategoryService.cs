@@ -12,7 +12,6 @@ namespace TechChallenge.Application.Services
 {
     public sealed class CategoryService : ICategoryService
     {
-
         #region Read-Only Fields
 
         private readonly IDbContext _dbContext;
@@ -23,27 +22,27 @@ namespace TechChallenge.Application.Services
 
         public CategoryService(IDbContext dbContext)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext)); ;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         #endregion
 
         #region ICategoryService Members
+
         public async Task<IEnumerable<DetailedCategoryResponse>> GetAsync()
         {
             IQueryable<DetailedCategoryResponse> categoriesQuery = (
-                        from category in _dbContext.Set<Category, int>().AsNoTracking()
-                        join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
-                            on category.IdPriority equals priority.Id
-                        select new DetailedCategoryResponse
-                        {
-                            Id= category.Id,
-                            Name= category.Name,
-                            CreatedAt= category.CreatedAt,
-                            Priority = new PriorityResponse { Id = priority.Id, Name = priority.Name }
-                        }
-                    );
-
+                from category in _dbContext.Set<Category, int>().AsNoTracking()
+                join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
+                    on category.IdPriority equals priority.Id
+                select new DetailedCategoryResponse
+                {
+                    Id= category.Id,
+                    Name= category.Name,
+                    CreatedAt= category.CreatedAt,
+                    Priority = new PriorityResponse { Id = priority.Id, Name = priority.Name }
+                }
+            );
 
             return await categoriesQuery.ToListAsync();
         }
@@ -51,23 +50,23 @@ namespace TechChallenge.Application.Services
         public async Task<DetailedCategoryResponse> GetByIdAsync(int idCategory)
         {
             IQueryable<DetailedCategoryResponse> categoriesQuery = (
-                        from category in _dbContext.Set<Category, int>().AsNoTracking()
-                        join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
-                            on category.IdPriority equals priority.Id
-                        where category.Id == idCategory
-                        select new DetailedCategoryResponse
-                        {
-                            Id = category.Id,
-                            Name = category.Name,
-                            CreatedAt = category.CreatedAt,
-                            Priority = new PriorityResponse { Id = priority.Id, Name = priority.Name }
-                        }
-                    );
+                from category in _dbContext.Set<Category, int>().AsNoTracking()
+                join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
+                    on category.IdPriority equals priority.Id
+                where
+                    category.Id == idCategory
+                select new DetailedCategoryResponse
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    CreatedAt = category.CreatedAt,
+                    Priority = new PriorityResponse { Id = priority.Id, Name = priority.Name }
+                }
+            );
 
-            return await categoriesQuery.SingleOrDefaultAsync();
+            return await categoriesQuery.FirstOrDefaultAsync();
         }
 
         #endregion
-
     }
 }

@@ -6,7 +6,11 @@ namespace TechChallenge.Application.Core.Abstractions.Services
 {
     public interface ITicketStatusService
     {
-        Task<StatusResponse> GetByIdAsync(int idTicketStatus);
+        #region ITicketStatusService Members
+
         Task<IEnumerable<StatusResponse>> GetAsync();
+        Task<StatusResponse> GetByIdAsync(int idTicketStatus);
+
+        #endregion
     }
 }

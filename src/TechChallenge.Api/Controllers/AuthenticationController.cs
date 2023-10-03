@@ -9,7 +9,7 @@ using TechChallenge.Application.Contracts.Authentication;
 using TechChallenge.Application.Core.Abstractions.Services;
 
 namespace TechChallenge.Api.Controllers
-{    
+{
     [AllowAnonymous]
     public sealed class AuthenticationController : ApiController
     {
@@ -40,7 +40,7 @@ namespace TechChallenge.Api.Controllers
             var response = await _authenticationService.Login(loginRequest.Email, loginRequest.Password);
             return Ok(response);
         }
-        
+
         [HttpPost(ApiRoutes.Authentication.Register)]
         [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]

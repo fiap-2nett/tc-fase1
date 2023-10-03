@@ -1,12 +1,16 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using TechChallenge.Application.Contracts.Category;
 
 namespace TechChallenge.Application.Core.Abstractions.Services
 {
     public interface ICategoryService
     {
-        Task<DetailedCategoryResponse> GetByIdAsync(int idCategory);
+        #region ICategoryService Members
+
         Task<IEnumerable<DetailedCategoryResponse>> GetAsync();
+        Task<DetailedCategoryResponse> GetByIdAsync(int idCategory);
+
+        #endregion
     }
 }

@@ -7,6 +7,8 @@ using TechChallenge.Domain.Core.Primitives;
 namespace TechChallenge.Api.Infrastructure
 {
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
     public class ApiController : ControllerBase
     {
         #region Methods
