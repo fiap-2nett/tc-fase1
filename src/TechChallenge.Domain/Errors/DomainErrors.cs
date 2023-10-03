@@ -83,20 +83,11 @@ namespace TechChallenge.Domain.Errors
                 "The password cannot be changed to the specified password.");
         }
 
-        public static class TicketError
+        public static class Ticket
         {
             public static Error NotFound => new Error(
                 "Ticket.NotFound",
                 "The ticket with the specified identifier was not found.");
-
-            public static Error InvalidFields => new Error(
-                "Ticket.InvalidFields",
-                "Possible solutions for this error.:" +
-                "1. You need to digit an integer numeric value between 1 and 4 for field IdCategory " +
-                "2. You should inform the 'description' of your ticket ");
-
         }
-
-
     }
 }

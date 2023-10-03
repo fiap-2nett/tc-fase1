@@ -6,7 +6,7 @@ namespace TechChallenge.Application.Core.Abstractions.Services
 {
     public interface ICategoryService
     {
-        Task<CategoryResponse> GetByIdAsync(int idCategory);
-        Task<IEnumerable<CategoryResponse>> GetAsync();
+        Task<DetailedCategoryResponse> GetByIdAsync(int idCategory);
+        Task<IEnumerable<DetailedCategoryResponse>> GetAsync();
     }
 }

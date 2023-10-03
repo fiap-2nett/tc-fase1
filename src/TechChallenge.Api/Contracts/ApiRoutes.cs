@@ -18,16 +18,16 @@ namespace TechChallenge.Api.Contracts
 
         public static class Category
         {
-            public const string Get = "category";
-            public const string GetbyId = "category/{idCategory:int}";
+            public const string Get = "categories";
+            public const string GetById = "categories/{idCategory:int}";
         }
 
         public static class Tickets
         {
-            public const string GetAllTickets = "tickets/get/all";
-            public const string GetByIdTickets = "tickets/get/by-id-detailed";
-            public const string CreateTicket = "tickets/create";
-            public const string AssigneTicket = "tickets/assigne";
+            public const string Get = "tickets";
+            public const string GetById = "tickets/{idTicket:int}";
+            public const string Create = "tickets";
+            public const string AssignToMe = "tickets/{idTicket:int}/assign-to/me";
         }
     }
 }

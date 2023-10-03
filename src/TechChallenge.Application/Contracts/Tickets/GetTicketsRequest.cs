@@ -1,12 +1,9 @@
 using System;
 
-
-
 namespace TechChallenge.Application.Contracts.Tickets
 {
     public sealed class GetTicketsRequest
     {
-
         #region Properties
 
         /// <summary>
@@ -35,6 +32,5 @@ namespace TechChallenge.Application.Contracts.Tickets
         }
 
         #endregion
-
     }
 }

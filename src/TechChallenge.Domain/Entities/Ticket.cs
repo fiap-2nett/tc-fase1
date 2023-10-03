@@ -1,9 +1,8 @@
 using System;
-using System.Xml.Linq;
-using TechChallenge.Domain.Core.Abstractions;
-using TechChallenge.Domain.Core.Primitives;
-using TechChallenge.Domain.Core.Utility;
 using TechChallenge.Domain.Enumerations;
+using TechChallenge.Domain.Core.Utility;
+using TechChallenge.Domain.Core.Primitives;
+using TechChallenge.Domain.Core.Abstractions;
 
 namespace TechChallenge.Domain.Entities
 {
@@ -15,7 +14,7 @@ namespace TechChallenge.Domain.Entities
         public byte IdStatus { get; private set; }
 
         public int IdUserRequester { get; private set; }
-        public int? IdUserAssigned { get; private set; } 
+        public int? IdUserAssigned { get; private set; }
 
         public string Description { get; private set; }
         public DateTime? CompletedAt { get; private set; }
@@ -33,36 +32,26 @@ namespace TechChallenge.Domain.Entities
         private Ticket()
         { }
 
-        public Ticket(int idCompany, int idCategory, int idUserRequester, TicketStatuses status, string description)
+        public Ticket(int idCategory, int idUserRequester, string description)
         {
-            Ensure.GreaterThan(idCompany, 0, "The company identifier must be greater than zero.", nameof(idCompany));
             Ensure.GreaterThan(idCategory, 0, "The category identifier must be greater than zero.", nameof(idCategory));
-            Ensure.GreaterThan(idUserRequester, 0, "The status identifier must be greater than zero.", nameof(idUserRequester));
+            Ensure.GreaterThan(idUserRequester, 0, "The user requester identifier must be greater than zero.", nameof(idUserRequester));
             Ensure.NotEmpty(description, "The ticket description is required.", nameof(description));
 
             IdCategory = idCategory;
             IdUserRequester = idUserRequester;
             Description = description;
-            IdStatus = (byte)status;
+            IdStatus = (byte)TicketStatuses.New;
         }
-
-        public void AssigneUser(int idTicket, int idAssignedUser)
-        {
-            Ensure.GreaterThan(idTicket, 0, "The company identifier must be greater than zero.", nameof(idTicket));
-            Ensure.GreaterThan(idAssignedUser, 0, "The company identifier must be greater than zero.", nameof(idAssignedUser));
-
-            Id = idTicket;
-            IdUserAssigned = idAssignedUser;
-        }
-
 
         #endregion
 
         #region Public Methods
 
-        public void AssignTo(int idUserToAssign)
+        public void AssignTo(int idUserAssigned)
         {
-            IdUserAssigned = idUserToAssign;
+            Ensure.GreaterThan(idUserAssigned, 0, "The user assigned identifier must be greater than zero.", nameof(idUserAssigned));
+            IdUserAssigned = idUserAssigned;
         }
 
         public void Cancel(string cancellationReason)

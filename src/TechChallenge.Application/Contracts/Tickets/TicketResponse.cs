@@ -1,18 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TechChallenge.Application.Contracts.Category;
 
-namespace TechChallenge.Application.Contracts.Tickets;
-
-public sealed class TicketResponse
+namespace TechChallenge.Application.Contracts.Tickets
 {
-    public int IdTicked { get; set; }
-    public string Description { get; set; }
-    public CategoryReponse Category { get; set; }
-    public StatusResponse Status { get; set; }
-    public int IdUserRequester { get; set; }
-    public int IdUserAssigned { get; set; }
+    /// <summary>
+    /// Represents the ticket response.
+    /// </summary>
+    public sealed class TicketResponse
+    {
+        /// <summary>
+        /// Gets or sets the ticket identifier.
+        /// </summary>
+        public int IdTicked { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ticket description.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ticket category.
+        /// </summary>
+        public CategoryReponse Category { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ticket status.
+        /// </summary>
+        public StatusResponse Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ticket user requester.
+        /// </summary>
+        public int IdUserRequester { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ticket user assigned.
+        /// </summary>
+        public int? IdUserAssigned { get; set; }
+    }
 }
