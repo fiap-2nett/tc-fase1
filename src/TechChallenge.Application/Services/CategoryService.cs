@@ -29,13 +29,13 @@ namespace TechChallenge.Application.Services
         #endregion
 
         #region ICategoryService Members
-        public async Task<IEnumerable<CategoryResponse>> GetAsync()
+        public async Task<IEnumerable<DetailedCategoryResponse>> GetAsync()
         {
-            IQueryable<CategoryResponse> categoriesQuery = (
+            IQueryable<DetailedCategoryResponse> categoriesQuery = (
                         from category in _dbContext.Set<Category, int>().AsNoTracking()
                         join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
                             on category.IdPriority equals priority.Id
-                        select new CategoryResponse
+                        select new DetailedCategoryResponse
                         {
                             Id= category.Id,
                             Name= category.Name,
@@ -48,14 +48,14 @@ namespace TechChallenge.Application.Services
             return await categoriesQuery.ToListAsync();
         }
 
-        public async Task<CategoryResponse> GetByIdAsync(int idCategory)
+        public async Task<DetailedCategoryResponse> GetByIdAsync(int idCategory)
         {
-            IQueryable<CategoryResponse> categoriesQuery = (
+            IQueryable<DetailedCategoryResponse> categoriesQuery = (
                         from category in _dbContext.Set<Category, int>().AsNoTracking()
                         join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
                             on category.IdPriority equals priority.Id
                         where category.Id == idCategory
-                        select new CategoryResponse
+                        select new DetailedCategoryResponse
                         {
                             Id = category.Id,
                             Name = category.Name,

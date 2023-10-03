@@ -1,4 +1,4 @@
-namespace TechChallenge.Application.Contracts.Tickets;
+namespace TechChallenge.Application.Contracts.Category;
 
 public sealed class CategoryReponse
 {

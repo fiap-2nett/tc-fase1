@@ -90,7 +90,7 @@ namespace TechChallenge.Api.Controllers
         [HttpPut(ApiRoutes.Users.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(UpdateUserRequest updateUserRequest)
+        public async Task<IActionResult> Update([FromBody] UpdateUserRequest updateUserRequest)
         {
             await _userService.UpdateUserAsync(_userSessionProvider.IdUser, updateUserRequest.Name, updateUserRequest.Surname);
             return Ok();

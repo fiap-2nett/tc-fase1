@@ -25,7 +25,7 @@ namespace TechChallenge.Api.Controllers
 
         #endregion
 
-        #region endpoints
+        #region Endpoints
 
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace TechChallenge.Api.Controllers
         /// <returns>One category</returns>
         [Consumes("application/json")]
         [Produces("application/json")]
-        [HttpGet(ApiRoutes.Category.GetbyId)]
+        [HttpGet(ApiRoutes.Category.GetById)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] int idCategory)

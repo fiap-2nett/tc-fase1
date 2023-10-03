@@ -73,6 +73,8 @@ namespace TechChallenge.Api.Middlewares
             return exception switch
             {
                 ValidationException validationException => (HttpStatusCode.BadRequest, validationException.Errors),
+                InvalidPermissionException invalidPermissionException => (HttpStatusCode.Forbidden, new[] { invalidPermissionException.Error }),
+                NotFoundException notFoundException => (HttpStatusCode.NotFound, new[] { notFoundException.Error }),
                 DomainException domainException => (HttpStatusCode.BadRequest, new[] { domainException.Error }),
                 _ => (HttpStatusCode.InternalServerError, new[] { DomainErrors.General.ServerError })
             };

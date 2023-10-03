@@ -1,7 +1,18 @@
-namespace TechChallenge.Application.Contracts.Tickets;
-
-public sealed class StatusResponse
+namespace TechChallenge.Application.Contracts.Tickets
 {
-    public int IdStatus { get; set; }
-    public string Name { get; set; }
+    /// <summary>
+    /// Represents the status response.
+    /// </summary>
+    public sealed class StatusResponse
+    {
+        /// <summary>
+        /// Gets or sets the status identifier.
+        /// </summary>
+        public int IdStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status name.
+        /// </summary>
+        public string Name { get; set; }
+    }
 }
