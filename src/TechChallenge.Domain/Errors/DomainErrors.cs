@@ -100,6 +100,22 @@ namespace TechChallenge.Domain.Errors
             public static Error HasAlreadyBeenCompletedOrCancelled => new Error(
                 "Ticket.HasAlreadyBeenCompletedOrCancelled",
                 "This ticket has already been completed or cancelled.");
+
+            public static Error StatusCannotBeChangedByThisUser => new Error(
+                "Ticket.StatusCannotBeChangedByThisUser",
+                "The ticket status cannot be changed by this user.");
+
+            public static Error CannotChangeStatusToNew => new Error(
+                "Ticket.CannotChangeStatusToNew",
+                "Change ticket status to 'New' is not permitted.");
+
+            public static Error StatusNotAllowed => new Error(
+                "Ticket.StatusNotAllowed",
+                "The ticket status cannot be changed to the one informed.");
+
+            public static Error StatusDoesNotExist => new Error(
+                "Ticket.StatusNotAllowed",
+                "The informed status is not valid or does not exist.");
         }
     }
 }

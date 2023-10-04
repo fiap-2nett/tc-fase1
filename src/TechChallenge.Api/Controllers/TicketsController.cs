@@ -33,7 +33,7 @@ namespace TechChallenge.Api.Controllers
         #region Endpoints
 
         /// <summary>
-        /// Represents the query for creating a new ticket.
+        /// Represents the query to retrieve all tickets.
         /// </summary>
         /// <param name="page">The page.</param>
         /// <param name="pageSize">The page size. The max page size is 100.</param>
@@ -44,7 +44,7 @@ namespace TechChallenge.Api.Controllers
             => Ok(await _ticketService.GetTicketsAsync(new GetTicketsRequest(page, pageSize), _userSessionProvider.IdUser));
 
         /// <summary>
-        /// Represents the query for getting a specific ticket.
+        /// Represents the query to retrieve a specific ticket.
         /// </summary>
         /// <returns>The detailed ticket info.</returns>       
         [HttpGet(ApiRoutes.Tickets.GetById)]
@@ -95,6 +95,21 @@ namespace TechChallenge.Api.Controllers
         public async Task<IActionResult> Complete([FromRoute] int idTicket)
         {
             await _ticketService.CompleteAsync(idTicket, _userSessionProvider.IdUser);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Represents the request to change the ticket status. Internal Movement only.
+        /// </summary>
+        /// <param idTicket="idTicket">The ticket identifier.</param>
+        /// <param idStatus="idStatus">The status identifier.</param>
+        [HttpPost(ApiRoutes.Tickets.ChangeStatus)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> ChangeStatus([FromRoute] int idTicket, int idStatus)
+        {
+            await _ticketService.ChangeStatusAsync(idTicket, idStatus, _userSessionProvider.IdUser);
             return Ok();
         }
 

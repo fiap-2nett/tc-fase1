@@ -130,9 +130,31 @@ namespace TechChallenge.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task ChangeStatusAsync(int idTicket, int ticketStatus)
+        public async Task ChangeStatusAsync(int idTicket, int ticketStatus, int idUserAction)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(idUserAction);
+            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
+
+            if (ticket is null)
+                throw new NotFoundException(DomainErrors.Ticket.NotFound);
+
+            if (user.IdRole == (byte)UserRoles.General || (user.IdRole == (byte)UserRoles.Analyst && ticket.IdUserAssigned != idUserAction))
+                throw new InvalidPermissionException(DomainErrors.Ticket.StatusCannotBeChangedByThisUser);
+
+            if (!Enum.IsDefined(typeof(TicketStatuses), (byte)ticketStatus))
+                throw new InvalidPermissionException(DomainErrors.Ticket.StatusDoesNotExist);
+
+            if (ticket.IdStatus == (byte)TicketStatuses.Cancelled || ticket.IdStatus == (byte)TicketStatuses.Completed)
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+
+            if (ticketStatus == (byte)TicketStatuses.New)
+                throw new DomainException(DomainErrors.Ticket.CannotChangeStatusToNew);
+
+            if (ticketStatus != (byte)TicketStatuses.InProgress && ticketStatus != (byte)TicketStatuses.OnHold && ticketStatus != (byte)TicketStatuses.Completed)
+                throw new DomainException(DomainErrors.Ticket.StatusNotAllowed);
+
+            ticket.ChangeStatus(ticketStatus);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task CancelAsync(int idTicket, string cancellationReason)

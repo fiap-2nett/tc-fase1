@@ -66,6 +66,13 @@ namespace TechChallenge.Domain.Entities
             IdStatus = (byte)TicketStatuses.Completed;
         }
 
+        public void ChangeStatus(int ticketStatus)
+        {
+            Ensure.GreaterThan(ticketStatus, 0, "The status informed must be greater than zero.", nameof(ticketStatus));
+            LastUpdatedAt = DateTime.Now;
+            IdStatus = (byte)ticketStatus;
+        }
+
         #endregion
     }
 }
