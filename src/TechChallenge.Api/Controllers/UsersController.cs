@@ -11,7 +11,7 @@ using TechChallenge.Application.Core.Abstractions.Services;
 
 namespace TechChallenge.Api.Controllers
 {
-    public class UsersController : ApiController
+    public sealed class UsersController : ApiController
     {
         #region Read-Only Fields
 
@@ -38,39 +38,25 @@ namespace TechChallenge.Api.Controllers
         /// <param name="page">The page.</param>
         /// <param name="pageSize">The page size. The max page size is 100.</param>
         /// <returns>The paged list of the users.</returns>
-        [Consumes("application/json")]
-        [Produces("application/json")]
         [HttpGet(ApiRoutes.Users.Get)]
         [ProducesResponseType(typeof(PagedList<UserResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int page, int pageSize)
-        {
-            var response = await _userService.GetUsersAsync(new GetUsersRequest(page, pageSize));
-            return Ok(response);
-        }
+            => Ok(await _userService.GetUsersAsync(new GetUsersRequest(page, pageSize)));
 
         /// <summary>
         /// Represents the query for getting a user authenticated.
         /// </summary>
-        /// <returns>The user authenticated info.</returns>
-        [Consumes("application/json")]
-        [Produces("application/json")]
+        /// <returns>The user authenticated info.</returns>        
         [HttpGet(ApiRoutes.Users.GetMyProfile)]
         [ProducesResponseType(typeof(DetailedUserResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetMyProfile()
-        {
-            var response = await _userService.GetUserByIdAsync(_userSessionProvider.IdUser);
-            return Ok(response);
-        }
+            => Ok(await _userService.GetUserByIdAsync(_userSessionProvider.IdUser));
 
         /// <summary>
         /// Represents the change password request.
         /// </summary>
         /// <param name="changePasswordRequest">Represents the change password request.</param>
-        /// <returns></returns>
-        [Consumes("application/json")]
-        [Produces("application/json")]
+        /// <returns></returns>        
         [HttpPut(ApiRoutes.Users.ChangePassword)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
@@ -84,9 +70,7 @@ namespace TechChallenge.Api.Controllers
         /// Represents the update user request.
         /// </summary>
         /// <param name="updateUserRequest">Represents the update user request.</param>
-        /// <returns></returns>
-        [Consumes("application/json")]
-        [Produces("application/json")]
+        /// <returns></returns>        
         [HttpPut(ApiRoutes.Users.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]

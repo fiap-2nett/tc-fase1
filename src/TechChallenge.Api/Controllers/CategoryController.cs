@@ -8,7 +8,7 @@ using TechChallenge.Application.Core.Abstractions.Services;
 
 namespace TechChallenge.Api.Controllers
 {
-    public class CategoryController : ApiController
+    public sealed class CategoryController : ApiController
     {
         #region Read-Only Fields
 
@@ -27,35 +27,27 @@ namespace TechChallenge.Api.Controllers
 
         #region Endpoints
 
-
         /// <summary>
         /// Represents the query for getting the list of the categories.
         /// </summary>
         /// <returns>The list of the categories</returns>
-        [Consumes("application/json")]
-        [Produces("application/json")]
         [HttpGet(ApiRoutes.Category.Get)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get() => Ok(await _categoryService.GetAsync());
-
+        public async Task<IActionResult> Get()
+            => Ok(await _categoryService.GetAsync());
 
         /// <summary>
         /// Represents the query to get the category by id.
         /// </summary>
         /// <param name="idCategory"></param>
         /// <returns>One category</returns>
-        [Consumes("application/json")]
-        [Produces("application/json")]
         [HttpGet(ApiRoutes.Category.GetById)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] int idCategory)
         {
             var response = await _categoryService.GetByIdAsync(idCategory);
-
-            if (response is null)
-                return NotFound();
+            if (response is null) return NotFound();
 
             return Ok(response);
         }
