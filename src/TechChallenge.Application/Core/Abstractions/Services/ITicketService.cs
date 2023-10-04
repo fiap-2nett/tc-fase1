@@ -15,6 +15,7 @@ namespace TechChallenge.Application.Core.Abstractions.Services
         Task ChangeStatusAsync(int idTicket, int ticketStatus);
         Task CancelAsync(int idTicket, string cancellationReason);
         Task AssignToUserAsync(int idTicket, int idUserAssigned);
+        Task CompleteAsync(int idTicket, int idUserAction);
 
         #endregion
     }

@@ -150,6 +150,29 @@ namespace TechChallenge.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task CompleteAsync(int idTicket, int idUserAction)
+        {
+            var user = await _userRepository.GetByIdAsync(idUserAction);
+            if (user.IdRole == (byte)UserRoles.General)
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
+
+            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
+            if (ticket is null)
+                throw new NotFoundException(DomainErrors.Ticket.NotFound);
+
+            if (ticket.IdStatus == (byte)TicketStatuses.New)
+                throw new DomainException(DomainErrors.Ticket.HasNotBeenAssignedToAUser);
+
+            if (ticket.IdStatus == (byte)TicketStatuses.Completed || ticket.IdStatus == (byte)TicketStatuses.Cancelled)
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+
+            if (user.IdRole == (byte)UserRoles.Analyst && ticket.IdUserAssigned != idUserAction)
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
+
+            ticket.Complete();
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         #endregion
     }
 }
