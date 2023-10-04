@@ -84,6 +84,20 @@ namespace TechChallenge.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Represents the request to complete the ticket.
+        /// </summary>
+        /// <param idTicket="idTicket">The ticket identifier.</param>
+        [HttpPost(ApiRoutes.Tickets.Complete)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> Complete([FromRoute] int idTicket)
+        {
+            await _ticketService.CompleteAsync(idTicket, _userSessionProvider.IdUser);
+            return Ok();
+        }
+
         #endregion
     }
 }

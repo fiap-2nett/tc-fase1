@@ -88,6 +88,18 @@ namespace TechChallenge.Domain.Errors
             public static Error NotFound => new Error(
                 "Ticket.NotFound",
                 "The ticket with the specified identifier was not found.");
+
+            public static Error CannotBeCompletedByThisUser => new Error(
+                "Ticket.CannotBeCompletedByThisUser",
+                "The ticket cannot be completed by this user.");
+
+            public static Error HasNotBeenAssignedToAUser => new Error(
+                "Ticket.HasNotBeenAssignedToAUser",
+                "The ticket has not been assigned to a user.");
+
+            public static Error HasAlreadyBeenCompletedOrCancelled => new Error(
+                "Ticket.HasAlreadyBeenCompletedOrCancelled",
+                "This ticket has already been completed or cancelled.");
         }
     }
 }

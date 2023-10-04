@@ -15,7 +15,7 @@ namespace TechChallenge.Persistence.Seeds
             yield return new { Id = (byte)TicketStatuses.InProgress,    Name = "Em andamento",  IsDeleted = false, CreatedAt = DateTime.MinValue.Date };
             yield return new { Id = (byte)TicketStatuses.OnHold,        Name = "Em espera",     IsDeleted = false, CreatedAt = DateTime.MinValue.Date };
             yield return new { Id = (byte)TicketStatuses.Completed,     Name = "Concluído",     IsDeleted = false, CreatedAt = DateTime.MinValue.Date };
-            yield return new { Id = (byte)TicketStatuses.Canceled,      Name = "Cancelado",     IsDeleted = false, CreatedAt = DateTime.MinValue.Date };
+            yield return new { Id = (byte)TicketStatuses.Cancelled,      Name = "Cancelado",     IsDeleted = false, CreatedAt = DateTime.MinValue.Date };
         }
     }
 }

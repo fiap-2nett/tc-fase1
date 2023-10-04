@@ -7,6 +7,6 @@ namespace TechChallenge.Domain.Enumerations
         InProgress = 3,
         OnHold = 4,
         Completed = 5,
-        Canceled = 6
+        Cancelled = 6
     }
 }
