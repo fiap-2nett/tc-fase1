@@ -54,6 +54,11 @@ namespace TechChallenge.Domain.Entities
         {
             Ensure.GreaterThan(idUserAssigned, 0, "The user assigned identifier must be greater than zero.", nameof(idUserAssigned));
             IdUserAssigned = idUserAssigned;
+            
+        }
+        public void NewToAssigned()
+        {
+            IdStatus = (byte)TicketStatuses.Assigned;
         }
 
         public void Cancel(string cancellationReason)

@@ -79,13 +79,29 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the request to assign the ticket to the logged in user.
         /// </summary>
-        /// <param name="idTicket">The ticket identifier.</param>
+        /// <param name="idTicket">The ticket identifier.</param>        
         [HttpPost(ApiRoutes.Tickets.AssignToMe)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AssignToMe([FromRoute] int idTicket)
         {
             await _ticketService.AssignToUserAsync(idTicket, _userSessionProvider.IdUser);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Represents the request to assign the ticket to other users.
+        /// </summary>
+        /// <param name="idTicket">The ticket identifier.</param>
+        /// <param name="idUser">The user identifier.</param>
+        [HttpPost(ApiRoutes.Tickets.AssignToUser)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AssignToUser([FromRoute] int idTicket, int idUser)
+        {
+            await _ticketService.AssignToUserAsync(idTicket, idUser);
             return Ok();
         }
 
