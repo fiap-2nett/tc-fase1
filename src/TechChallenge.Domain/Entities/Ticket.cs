@@ -1,4 +1,6 @@
 using System;
+using TechChallenge.Domain.Errors;
+using TechChallenge.Domain.Exceptions;
 using TechChallenge.Domain.Enumerations;
 using TechChallenge.Domain.Core.Utility;
 using TechChallenge.Domain.Core.Primitives;
@@ -60,17 +62,47 @@ namespace TechChallenge.Domain.Entities
             CancellationReason = cancellationReason;
         }
 
-        public void Complete()
+        public void Complete(User userPerformedAction)
         {
+            if (userPerformedAction is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (userPerformedAction.IdRole == (byte)UserRoles.General)
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
+
+            if (userPerformedAction.IdRole == (byte)UserRoles.Analyst && IdUserAssigned != userPerformedAction.Id)
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
+
+            if (IdStatus == (byte)TicketStatuses.New)
+                throw new DomainException(DomainErrors.Ticket.HasNotBeenAssignedToAUser);
+
+            if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+
             CompletedAt = DateTime.Now;
+            LastUpdatedBy = userPerformedAction.Id;
             IdStatus = (byte)TicketStatuses.Completed;
         }
 
-        public void ChangeStatus(int ticketStatus)
+        public void ChangeStatus(TicketStatuses changedStatus, User userPerformedAction)
         {
-            Ensure.GreaterThan(ticketStatus, 0, "The status informed must be greater than zero.", nameof(ticketStatus));
-            LastUpdatedAt = DateTime.Now;
-            IdStatus = (byte)ticketStatus;
+            if (userPerformedAction is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (userPerformedAction.IdRole == (byte)UserRoles.General || (userPerformedAction.IdRole == (byte)UserRoles.Analyst && IdUserAssigned != userPerformedAction.Id))
+                throw new InvalidPermissionException(DomainErrors.Ticket.StatusCannotBeChangedByThisUser);
+
+            if (changedStatus == TicketStatuses.New)
+                throw new DomainException(DomainErrors.Ticket.CannotChangeStatusToNew);
+            
+            if (IdStatus == (byte)TicketStatuses.Cancelled || IdStatus == (byte)TicketStatuses.Completed)
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+
+            if (changedStatus != TicketStatuses.InProgress && changedStatus != TicketStatuses.OnHold && changedStatus != TicketStatuses.Completed)
+                throw new DomainException(DomainErrors.Ticket.StatusNotAllowed);
+            
+            IdStatus = (byte)changedStatus;
+            LastUpdatedBy = userPerformedAction.Id;
         }
 
         #endregion

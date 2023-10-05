@@ -8,6 +8,10 @@ using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Contracts.Tickets;
 using TechChallenge.Application.Core.Abstractions.Authentication;
 using TechChallenge.Application.Core.Abstractions.Services;
+using TechChallenge.Domain.Enumerations;
+using TechChallenge.Domain.Exceptions;
+using TechChallenge.Domain.Errors;
+using TechChallenge.Domain.Helpers;
 
 namespace TechChallenge.Api.Controllers
 {
@@ -46,6 +50,7 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the query to retrieve a specific ticket.
         /// </summary>
+        /// <param name="idTicket">The ticket identifier.</param>
         /// <returns>The detailed ticket info.</returns>       
         [HttpGet(ApiRoutes.Tickets.GetById)]
         [ProducesResponseType(typeof(DetailedTicketResponse), StatusCodes.Status200OK)]
@@ -74,7 +79,7 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the request to assign the ticket to the logged in user.
         /// </summary>
-        /// <param idTicket="idTicket">The ticket identifier.</param>
+        /// <param name="idTicket">The ticket identifier.</param>
         [HttpPost(ApiRoutes.Tickets.AssignToMe)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -87,7 +92,7 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the request to complete the ticket.
         /// </summary>
-        /// <param idTicket="idTicket">The ticket identifier.</param>
+        /// <param name="idTicket">The ticket identifier.</param>
         [HttpPost(ApiRoutes.Tickets.Complete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,15 +106,18 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the request to change the ticket status. Internal Movement only.
         /// </summary>
-        /// <param idTicket="idTicket">The ticket identifier.</param>
-        /// <param idStatus="idStatus">The status identifier.</param>
+        /// <param name="idTicket">The ticket identifier.</param>
+        /// <param name="changeStatusRequest">Represents the request to change the ticket status.</param>
         [HttpPost(ApiRoutes.Tickets.ChangeStatus)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ChangeStatus([FromRoute] int idTicket, int idStatus)
-        {
-            await _ticketService.ChangeStatusAsync(idTicket, idStatus, _userSessionProvider.IdUser);
+        public async Task<IActionResult> ChangeStatus([FromRoute] int idTicket, [FromBody] ChangeStatusRequest changeStatusRequest)
+        {            
+            if (!EnumHelper.TryConvert(changeStatusRequest.IdStatus, out TicketStatuses changedStatus))
+                throw new DomainException(DomainErrors.Ticket.StatusDoesNotExist);
+
+            await _ticketService.ChangeStatusAsync(idTicket, changedStatus, _userSessionProvider.IdUser);
             return Ok();
         }
 

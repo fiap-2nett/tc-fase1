@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Contracts.Tickets;
+using TechChallenge.Domain.Enumerations;
 
 namespace TechChallenge.Application.Core.Abstractions.Services
 {
@@ -12,10 +13,10 @@ namespace TechChallenge.Application.Core.Abstractions.Services
         Task<PagedList<TicketResponse>> GetTicketsAsync(GetTicketsRequest request, int idUser);
         Task CreateAsync(int idCategory, int idUserRequester, string description);
         Task UpdateAsync(int idTicket, int idCategory, string description);
-        Task ChangeStatusAsync(int idTicket, int ticketStatus, int idUserAction);
+        Task ChangeStatusAsync(int idTicket, TicketStatuses changedStatus, int idUserPerformedAction);
         Task CancelAsync(int idTicket, string cancellationReason);
         Task AssignToUserAsync(int idTicket, int idUserAssigned);
-        Task CompleteAsync(int idTicket, int idUserAction);
+        Task CompleteAsync(int idTicket, int idUserPerformedAction);
 
         #endregion
     }
