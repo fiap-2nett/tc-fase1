@@ -13,6 +13,7 @@ using TechChallenge.Application.Contracts.Tickets;
 using TechChallenge.Application.Contracts.Category;
 using TechChallenge.Application.Core.Abstractions.Data;
 using TechChallenge.Application.Core.Abstractions.Services;
+using Microsoft.VisualBasic;
 
 namespace TechChallenge.Application.Services
 {
@@ -125,9 +126,22 @@ namespace TechChallenge.Application.Services
             await _unitOfWork.SaveChangesAsync();            
         }
 
-        public async Task UpdateAsync(int idTicket, int idCategory, string description)
+        public async Task UpdateAsync(int idTicket, int idCategory, string description, int idUserPerformedAction)
         {
-            throw new NotImplementedException();
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var tiket = await _ticketRepository.GetByIdAsync(idTicket);
+            if (tiket is null)
+                throw new NotFoundException(DomainErrors.Ticket.NotFound);
+
+            if (tiket.IdUserRequester != idUserPerformedAction)
+                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
+            tiket.Update(idCategory, description, userPerformedAction);
+            await _unitOfWork.SaveChangesAsync();
+         
         }
 
         public async Task ChangeStatusAsync(int idTicket, TicketStatuses changedStatus, int idUserPerformedAction)

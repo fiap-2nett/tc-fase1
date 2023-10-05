@@ -6,6 +6,7 @@ using TechChallenge.Domain.Core.Utility;
 using TechChallenge.Domain.Core.Primitives;
 using TechChallenge.Domain.Core.Abstractions;
 using TechChallenge.Domain.Extensions;
+using TechChallenge.Domain.Helpers;
 
 namespace TechChallenge.Domain.Entities
 {
@@ -50,6 +51,20 @@ namespace TechChallenge.Domain.Entities
         #endregion
 
         #region Public Methods
+
+        public void Update(int idCategory, string description, User userPerformedAction)
+        {
+            Ensure.NotEmpty(description, "The ticket description is required.", nameof(description));
+            Ensure.GreaterThan(idCategory, 0, "The category identifier must be greater than zero.", nameof(idCategory));
+
+            if (!EnumHelper.TryConvert(idCategory, out TicketCategory category))
+                throw new DomainException(DomainErrors.Category.CategoryDoesNotExist);
+
+            Description = description;
+            IdCategory = idCategory;
+            LastUpdatedAt= DateTime.UtcNow;
+            LastUpdatedBy = userPerformedAction.Id;
+        }
 
         public void AssignTo(User userAssigned, User userPerformedAction)
         {
