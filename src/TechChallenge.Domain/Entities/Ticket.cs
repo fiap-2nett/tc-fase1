@@ -2,7 +2,6 @@ using System;
 using TechChallenge.Domain.Errors;
 using TechChallenge.Domain.Exceptions;
 using TechChallenge.Domain.Enumerations;
-using TechChallenge.Domain.Core.Utility;
 using TechChallenge.Domain.Core.Primitives;
 using TechChallenge.Domain.Core.Abstractions;
 using TechChallenge.Domain.Extensions;
@@ -35,15 +34,20 @@ namespace TechChallenge.Domain.Entities
         private Ticket()
         { }
 
-        public Ticket(int idCategory, int idUserRequester, string description)
+        public Ticket(Category category, string description, User userRequester)
         {
-            Ensure.GreaterThan(idCategory, 0, "The category identifier must be greater than zero.", nameof(idCategory));
-            Ensure.GreaterThan(idUserRequester, 0, "The user requester identifier must be greater than zero.", nameof(idUserRequester));
-            Ensure.NotEmpty(description, "The ticket description is required.", nameof(description));
+            if (category is null)
+                throw new DomainException(DomainErrors.Category.NotFound);
 
-            IdCategory = idCategory;
-            IdUserRequester = idUserRequester;
+            if (userRequester is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (description.IsNullOrWhiteSpace())
+                throw new DomainException(DomainErrors.Ticket.DescriptionIsRequired);
+
+            IdCategory = category.Id;
             Description = description;
+            IdUserRequester = userRequester.Id;
             IdStatus = (byte)TicketStatuses.New;
         }
 
@@ -56,7 +60,7 @@ namespace TechChallenge.Domain.Entities
             if (category is null)
                 throw new DomainException(DomainErrors.Category.NotFound);
 
-            if (description.IsNullOrEmpty())
+            if (description.IsNullOrWhiteSpace())
                 throw new DomainException(DomainErrors.Ticket.DescriptionIsRequired);
 
             if (userPerformedAction is null)
@@ -97,7 +101,7 @@ namespace TechChallenge.Domain.Entities
             if (userPerformedAction.IdRole == (byte)UserRoles.General)
                 throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
 
-            if (cancellationReason.IsNullOrEmpty())
+            if (cancellationReason.IsNullOrWhiteSpace())
                 throw new DomainException(DomainErrors.Ticket.CancellationReasonIsRequired);
 
             CancellationReason = cancellationReason;

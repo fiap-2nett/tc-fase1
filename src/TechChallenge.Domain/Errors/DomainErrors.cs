@@ -125,9 +125,9 @@ namespace TechChallenge.Domain.Errors
                 "Ticket.CancellationReasonIsRequired",
                 "The reason for ticket cancellation is required.");
 
-            public static Error InvalidOrMissingUpdateData => new Error(
-                "Ticket.InvalidOrMissingUpdateData",
-                "The update data is invalid or missing.");
+            public static Error DataSentIsInvalid => new Error(
+                "Ticket.DataSentIsInvalid",
+                "The ticket data sent in the request is invalid.");
 
             public static Error DescriptionIsRequired = new Error(
                 "Ticket.DescriptionIsRequired",

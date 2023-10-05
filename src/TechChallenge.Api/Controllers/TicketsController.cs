@@ -62,15 +62,21 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the request to create a ticket.
         /// </summary>
-        /// <param name="ticketRequest">Represents the request to create a ticket</param>
+        /// <param name="createTicketRequest">Represents the request to create a ticket</param>
         /// <returns></returns>
         [HttpPost(ApiRoutes.Tickets.Create)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] TicketRequest ticketRequest)
+        public async Task<IActionResult> Create([FromBody] CreateTicketRequest createTicketRequest)
         {
-            await _ticketService.CreateAsync(ticketRequest.IdCategory, _userSessionProvider.IdUser, ticketRequest.Description);
-            return Ok();
+            if (createTicketRequest is null)
+                throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
+
+            var idTicket = await _ticketService.CreateAsync(createTicketRequest.IdCategory,
+                createTicketRequest.Description,
+                idUserRequester: _userSessionProvider.IdUser);
+
+            return Created(new Uri(Url.ActionLink(nameof(GetById), "Tickets", new { idTicket })), idTicket);
         }
 
         /// <summary>
@@ -91,22 +97,22 @@ namespace TechChallenge.Api.Controllers
         }
 
         /// <summary>
-        ///Represents editing the category and description of a specific ticket.
+        /// Represents the request to update the ticket.
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
-        /// <param name="ticketRequest">Representa a solicitação para editar o ticket</param>
+        /// <param name="updateTicketRequest">Represents the request to update the ticket.</param>
         [HttpPut(ApiRoutes.Tickets.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update([FromRoute] int idTicket, [FromBody] TicketRequest ticketRequest)
+        public async Task<IActionResult> Update([FromRoute] int idTicket, [FromBody] UpdateTicketRequest updateTicketRequest)
         {
-            if (ticketRequest is null)
-                throw new DomainException(DomainErrors.Ticket.InvalidOrMissingUpdateData);
+            if (updateTicketRequest is null)
+                throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
 
             await _ticketService.UpdateAsync(idTicket,
-                ticketRequest.IdCategory,
-                ticketRequest.Description,
+                updateTicketRequest.IdCategory,
+                updateTicketRequest.Description,
                 idUserPerformedAction: _userSessionProvider.IdUser);
 
             return Ok();
