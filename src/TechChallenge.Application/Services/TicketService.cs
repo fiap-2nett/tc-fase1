@@ -149,27 +149,21 @@ namespace TechChallenge.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task AssignToUserAsync(int idTicket, int idUserAssigned)
+        public async Task AssignToUserAsync(int idTicket, int idUserAssigned, int idUserPerformedAction)
         {
-            var user = await _userRepository.GetByIdAsync(idUserAssigned);
-            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
+            var userAssigned = await _userRepository.GetByIdAsync(idUserAssigned);
+            if (userAssigned is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
 
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
             if (ticket is null)
                 throw new NotFoundException(DomainErrors.Ticket.NotFound);
 
-            if (ticket.IdStatus == (byte)TicketStatuses.Completed || ticket.IdStatus == (byte)TicketStatuses.Cancelled)
-                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
-
-            if (ticket.IdStatus == (byte)TicketStatuses.New)
-                ticket.NewToAssigned();
-
-            if (user is null)
-                throw new NotFoundException(DomainErrors.User.NotFound);
-
-            if (user.IdRole == (byte)UserRoles.General)
-                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
-
-            ticket.AssignTo(idUserAssigned);
+            ticket.AssignTo(userAssigned, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
         }
 

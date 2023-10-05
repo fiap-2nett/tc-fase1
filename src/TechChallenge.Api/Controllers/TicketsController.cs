@@ -86,7 +86,10 @@ namespace TechChallenge.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AssignToMe([FromRoute] int idTicket)
         {
-            await _ticketService.AssignToUserAsync(idTicket, _userSessionProvider.IdUser);
+            await _ticketService.AssignToUserAsync(idTicket,
+                idUserAssigned: _userSessionProvider.IdUser,
+                idUserPerformedAction: _userSessionProvider.IdUser);
+
             return Ok();
         }
 
@@ -94,14 +97,17 @@ namespace TechChallenge.Api.Controllers
         /// Represents the request to assign the ticket to other users.
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
-        /// <param name="idUser">The user identifier.</param>
-        [HttpPost(ApiRoutes.Tickets.AssignToUser)]
+        /// <param name="assignToRequest">Represents the request to assign the ticket to other users</param>
+        [HttpPost(ApiRoutes.Tickets.AssignTo)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AssignToUser([FromRoute] int idTicket, int idUser)
+        public async Task<IActionResult> AssignTo([FromRoute] int idTicket, [FromBody] AssignToRequest assignToRequest)
         {
-            await _ticketService.AssignToUserAsync(idTicket, idUser);
+            await _ticketService.AssignToUserAsync(idTicket,
+                idUserAssigned: assignToRequest.IdUserAssigned,
+                idUserPerformedAction: _userSessionProvider.IdUser);
+
             return Ok();
         }
 
