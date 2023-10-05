@@ -5,6 +5,7 @@ using TechChallenge.Domain.Enumerations;
 using TechChallenge.Domain.Core.Utility;
 using TechChallenge.Domain.Core.Primitives;
 using TechChallenge.Domain.Core.Abstractions;
+using TechChallenge.Domain.Extensions;
 
 namespace TechChallenge.Domain.Entities
 {
@@ -50,16 +51,39 @@ namespace TechChallenge.Domain.Entities
 
         #region Public Methods
 
-        public void AssignTo(int idUserAssigned)
+        public void AssignTo(User userAssigned, User userPerformedAction)
         {
-            Ensure.GreaterThan(idUserAssigned, 0, "The user assigned identifier must be greater than zero.", nameof(idUserAssigned));
-            IdUserAssigned = idUserAssigned;
+            if (userAssigned is null || userPerformedAction is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (userAssigned.IdRole != (byte)UserRoles.Analyst)
+                throw new DomainException(DomainErrors.Ticket.CannotBeAssignedToThisUser);
+
+            if (userPerformedAction.IdRole == (byte)UserRoles.General)
+                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
+            if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+            
+            IdUserAssigned = userAssigned.Id;
+            LastUpdatedBy = userPerformedAction.Id;
+            IdStatus = (byte)TicketStatuses.Assigned;
         }
 
-        public void Cancel(string cancellationReason)
+        public void Cancel(string cancellationReason, User userPerformedAction)
         {
-            Ensure.NotEmpty(cancellationReason, "The cancellation reason is required.", nameof(cancellationReason));
+            if (userPerformedAction is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (userPerformedAction.IdRole == (byte)UserRoles.General)
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
+
+            if (cancellationReason.IsNullOrEmpty())
+                throw new DomainException(DomainErrors.Ticket.CancellationReasonIsRequired);
+
             CancellationReason = cancellationReason;
+            LastUpdatedBy = userPerformedAction.Id;
+            IdStatus = (byte)TicketStatuses.Cancelled;
         }
 
         public void Complete(User userPerformedAction)

@@ -10,9 +10,9 @@ using TechChallenge.Domain.Enumerations;
 using TechChallenge.Domain.Repositories;
 using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Contracts.Tickets;
+using TechChallenge.Application.Contracts.Category;
 using TechChallenge.Application.Core.Abstractions.Data;
 using TechChallenge.Application.Core.Abstractions.Services;
-using TechChallenge.Application.Contracts.Category;
 
 namespace TechChallenge.Application.Services
 {
@@ -46,7 +46,7 @@ namespace TechChallenge.Application.Services
             var user = await _userRepository.GetByIdAsync(idUser);
 
             var ticketResult = await (
-                from ticket in _dbContext.Set<Ticket, int>().AsNoTracking()
+                from ticket in _dbContext.Set<Domain.Entities.Ticket, int>().AsNoTracking()
                 join status in _dbContext.Set<TicketStatus, byte>().AsNoTracking()
                     on ticket.IdStatus equals status.Id                
                 join category in _dbContext.Set<Category, int>().AsNoTracking()
@@ -85,7 +85,7 @@ namespace TechChallenge.Application.Services
             var user = await _userRepository.GetByIdAsync(idUser);
 
             IQueryable<TicketResponse> ticketsQuery = (
-                from ticket in _dbContext.Set<Ticket, int>().AsNoTracking()
+                from ticket in _dbContext.Set<Domain.Entities.Ticket, int>().AsNoTracking()
                 join status in _dbContext.Set<TicketStatus, byte>().AsNoTracking()
                     on ticket.IdStatus equals status.Id                    
                 join category in _dbContext.Set<Category, int>().AsNoTracking()
@@ -149,13 +149,21 @@ namespace TechChallenge.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task AssignToUserAsync(int idTicket, int idUserAssigned)
+        public async Task AssignToUserAsync(int idTicket, int idUserAssigned, int idUserPerformedAction)
         {
+            var userAssigned = await _userRepository.GetByIdAsync(idUserAssigned);
+            if (userAssigned is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
             var ticket = await _ticketRepository.GetByIdAsync(idTicket);
             if (ticket is null)
                 throw new NotFoundException(DomainErrors.Ticket.NotFound);
 
-            ticket.AssignTo(idUserAssigned);
+            ticket.AssignTo(userAssigned, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
         }
 

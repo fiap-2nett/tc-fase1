@@ -116,6 +116,14 @@ namespace TechChallenge.Domain.Errors
             public static Error StatusDoesNotExist => new Error(
                 "Ticket.StatusNotAllowed",
                 "The informed status is not valid or does not exist.");
+
+            public static Error CannotBeAssignedToThisUser = new Error(
+                "Ticket.CantBeAssignedToThisUser",
+                "The ticket cannot be assigned to this user.");
+
+            public static Error CancellationReasonIsRequired = new Error(
+                "Ticket.CancellationReasonIsRequired",
+                "The reason for ticket cancellation is required.");
         }
     }
 }
