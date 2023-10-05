@@ -29,6 +29,7 @@ namespace TechChallenge.Api.Contracts
             public const string Create = "tickets";
             public const string AssignToMe = "tickets/{idTicket:int}/assign-to/me";
             public const string Complete = "tickets/{idTicket:int}/complete";
+            public const string ChangeStatus = "tickets/{idTicket:int}/change-status";
         }
 
         public static class TicketStatus
