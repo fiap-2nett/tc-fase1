@@ -1,3 +1,6 @@
+using FluentValidation;
+using TechChallenge.Domain.Errors;
+
 namespace TechChallenge.Application.Contracts.Tickets
 {
     /// <summary>
@@ -14,5 +17,6 @@ namespace TechChallenge.Application.Contracts.Tickets
         /// Gets or sets the description.
         /// </summary>
         public string Description { get; set; }
+
     }
 }

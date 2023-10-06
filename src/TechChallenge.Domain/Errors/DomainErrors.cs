@@ -124,6 +124,10 @@ namespace TechChallenge.Domain.Errors
             public static Error CancellationReasonIsRequired = new Error(
                 "Ticket.CancellationReasonIsRequired",
                 "The reason for ticket cancellation is required.");
+
+            public static Error CategoryOrDescriptionDoesNotExist => new Error(
+                "Ticket.CategoryOrDescriptionNotAllowed",
+                "The informed category or description are not valid or does not exist.");
         }
 
         public static class Category

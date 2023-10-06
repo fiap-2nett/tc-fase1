@@ -105,6 +105,9 @@ namespace TechChallenge.Api.Controllers
         public async Task<IActionResult> Update([FromRoute] int idTicket,
                                                 [FromBody] TicketRequest ticketRequest)
         {
+            if (ticketRequest is null)
+                throw new DomainException(DomainErrors.Ticket.CategoryOrDescriptionDoesNotExist);
+
             await _ticketService.UpdateAsync(idTicket,
                                              ticketRequest.IdCategory,
                                              ticketRequest.Description,
