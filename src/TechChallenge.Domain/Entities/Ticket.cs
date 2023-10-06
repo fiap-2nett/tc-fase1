@@ -88,6 +88,12 @@ namespace TechChallenge.Domain.Entities
             if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
                 throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
+            if (IdStatus == (byte)TicketStatuses.New && userPerformedAction.Id != userAssigned.Id && userPerformedAction.IdRole != (byte)UserRoles.Administrator)
+                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
+            if (IdUserAssigned != userPerformedAction.Id && userPerformedAction.IdRole != (byte)UserRoles.Administrator && IdStatus != (byte)TicketStatuses.New)
+                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
             IdUserAssigned = userAssigned.Id;
             LastUpdatedBy = userPerformedAction.Id;
             IdStatus = (byte)TicketStatuses.Assigned;
