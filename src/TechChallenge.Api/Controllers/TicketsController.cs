@@ -129,6 +129,9 @@ namespace TechChallenge.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AssignTo([FromRoute] int idTicket, [FromBody] AssignToRequest assignToRequest)
         {
+            if (assignToRequest is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
             await _ticketService.AssignToUserAsync(idTicket,
                 idUserAssigned: assignToRequest.IdUserAssigned,
                 idUserPerformedAction: _userSessionProvider.IdUser);

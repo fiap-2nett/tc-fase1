@@ -77,16 +77,16 @@ namespace TechChallenge.Domain.Entities
         public void AssignTo(User userAssigned, User userPerformedAction)
         {
             if (userAssigned is null || userPerformedAction is null)
-                throw new DomainException(DomainErrors.User.NotFound);
+                throw new NotFoundException(DomainErrors.User.NotFound);
 
             if (userAssigned.IdRole != (byte)UserRoles.Analyst)
-                throw new DomainException(DomainErrors.Ticket.CannotBeAssignedToThisUser);
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeAssignedToThisUser);
 
             if (userPerformedAction.IdRole == (byte)UserRoles.General)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
             if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
-                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+                throw new InvalidPermissionException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             if (IdStatus == (byte)TicketStatuses.New && userPerformedAction.Id != userAssigned.Id && userPerformedAction.IdRole != (byte)UserRoles.Administrator)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
