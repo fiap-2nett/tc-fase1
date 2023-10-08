@@ -11,7 +11,7 @@ namespace TechChallenge.Api.Contracts
         public static class Users
         {
             public const string Get = "users";
-            public const string GetMyProfile = "users/me";            
+            public const string GetMyProfile = "users/me";
             public const string Update = "users/me";
             public const string ChangePassword = "users/me/change-password";
         }

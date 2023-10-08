@@ -125,16 +125,20 @@ namespace TechChallenge.Domain.Errors
                 "Ticket.CancellationReasonIsRequired",
                 "The reason for ticket cancellation is required.");
 
-            public static Error CategoryOrDescriptionDoesNotExist => new Error(
-                "Ticket.CategoryOrDescriptionNotAllowed",
-                "The informed category or description are not valid or does not exist.");
+            public static Error InvalidOrMissingUpdateData => new Error(
+                "Ticket.InvalidOrMissingUpdateData",
+                "The update data is invalid or missing.");
+
+            public static Error DescriptionIsRequired = new Error(
+                "Ticket.DescriptionIsRequired",
+                "The ticket description is required.");
         }
 
         public static class Category
         {
-            public static Error CategoryDoesNotExist => new Error(
-                    "Ticket.CategoryDoesNotExist",
-                    "The informed category is not valid or does not exist.");
+            public static Error NotFound => new Error(
+                "Category.NotFound",
+                "The category with the specified identifier was not found.");
         }
     }
 }

@@ -6,7 +6,6 @@ using TechChallenge.Domain.Core.Utility;
 using TechChallenge.Domain.Core.Primitives;
 using TechChallenge.Domain.Core.Abstractions;
 using TechChallenge.Domain.Extensions;
-using TechChallenge.Domain.Helpers;
 
 namespace TechChallenge.Domain.Entities
 {
@@ -52,17 +51,22 @@ namespace TechChallenge.Domain.Entities
 
         #region Public Methods
 
-        public void Update(int idCategory, string description, User userPerformedAction)
+        public void Update(Category category, string description, User userPerformedAction)
         {
-            Ensure.NotEmpty(description, "The ticket description is required.", nameof(description));
-            Ensure.GreaterThan(idCategory, 0, "The category identifier must be greater than zero.", nameof(idCategory));
+            if (category is null)
+                throw new DomainException(DomainErrors.Category.NotFound);
 
-            if (!EnumHelper.TryConvert(idCategory, out TicketCategory category))
-                throw new DomainException(DomainErrors.Category.CategoryDoesNotExist);
+            if (description.IsNullOrEmpty())
+                throw new DomainException(DomainErrors.Ticket.DescriptionIsRequired);
 
+            if (userPerformedAction is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (IdUserRequester != userPerformedAction.Id)
+                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
+            IdCategory = category.Id;
             Description = description;
-            IdCategory = idCategory;
-            LastUpdatedAt= DateTime.UtcNow;
             LastUpdatedBy = userPerformedAction.Id;
         }
 
@@ -79,7 +83,7 @@ namespace TechChallenge.Domain.Entities
 
             if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
                 throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
-            
+
             IdUserAssigned = userAssigned.Id;
             LastUpdatedBy = userPerformedAction.Id;
             IdStatus = (byte)TicketStatuses.Assigned;
@@ -133,13 +137,13 @@ namespace TechChallenge.Domain.Entities
 
             if (changedStatus == TicketStatuses.New)
                 throw new DomainException(DomainErrors.Ticket.CannotChangeStatusToNew);
-            
+
             if (IdStatus == (byte)TicketStatuses.Cancelled || IdStatus == (byte)TicketStatuses.Completed)
                 throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             if (changedStatus != TicketStatuses.InProgress && changedStatus != TicketStatuses.OnHold && changedStatus != TicketStatuses.Completed)
                 throw new DomainException(DomainErrors.Ticket.StatusNotAllowed);
-            
+
             IdStatus = (byte)changedStatus;
             LastUpdatedBy = userPerformedAction.Id;
         }

@@ -41,7 +41,7 @@ namespace TechChallenge.Api.Controllers
         /// </summary>
         /// <param name="page">The page.</param>
         /// <param name="pageSize">The page size. The max page size is 100.</param>
-        /// <returns>The paged list of the tickets.</returns>        
+        /// <returns>The paged list of the tickets.</returns>
         [HttpGet(ApiRoutes.Tickets.Get)]
         [ProducesResponseType(typeof(PagedList<TicketResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get(int page, int pageSize)
@@ -51,22 +51,19 @@ namespace TechChallenge.Api.Controllers
         /// Represents the query to retrieve a specific ticket.
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
-        /// <returns>The detailed ticket info.</returns>       
+        /// <returns>The detailed ticket info.</returns>
         [HttpGet(ApiRoutes.Tickets.GetById)]
         [ProducesResponseType(typeof(DetailedTicketResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById([FromRoute] int idTicket)
-        {
-            var response = await _ticketService.GetTicketByIdAsync(idTicket, _userSessionProvider.IdUser);
-            return Ok(response);
-        }
+            => Ok(await _ticketService.GetTicketByIdAsync(idTicket, _userSessionProvider.IdUser));
 
         /// <summary>
         /// Represents the request to create a ticket.
         /// </summary>
         /// <param name="ticketRequest">Represents the request to create a ticket</param>
-        /// <returns></returns>        
+        /// <returns></returns>
         [HttpPost(ApiRoutes.Tickets.Create)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,7 +76,7 @@ namespace TechChallenge.Api.Controllers
         /// <summary>
         /// Represents the request to assign the ticket to the logged in user.
         /// </summary>
-        /// <param name="idTicket">The ticket identifier.</param>        
+        /// <param name="idTicket">The ticket identifier.</param>
         [HttpPost(ApiRoutes.Tickets.AssignToMe)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -97,21 +94,21 @@ namespace TechChallenge.Api.Controllers
         ///Represents editing the category and description of a specific ticket.
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
-        /// <param name="ticketRequest">Representa a solicitação para editar o ticket</param>        
+        /// <param name="ticketRequest">Representa a solicitação para editar o ticket</param>
         [HttpPut(ApiRoutes.Tickets.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update([FromRoute] int idTicket,
-                                                [FromBody] TicketRequest ticketRequest)
+        public async Task<IActionResult> Update([FromRoute] int idTicket, [FromBody] TicketRequest ticketRequest)
         {
             if (ticketRequest is null)
-                throw new DomainException(DomainErrors.Ticket.CategoryOrDescriptionDoesNotExist);
+                throw new DomainException(DomainErrors.Ticket.InvalidOrMissingUpdateData);
 
             await _ticketService.UpdateAsync(idTicket,
-                                             ticketRequest.IdCategory,
-                                             ticketRequest.Description,
-                                             _userSessionProvider.IdUser);
+                ticketRequest.IdCategory,
+                ticketRequest.Description,
+                idUserPerformedAction: _userSessionProvider.IdUser);
+
             return Ok();
         }
 
