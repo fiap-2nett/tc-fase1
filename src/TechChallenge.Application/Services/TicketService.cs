@@ -24,17 +24,20 @@ namespace TechChallenge.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
         private readonly ITicketRepository _ticketRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         #endregion
 
         #region Constructors
 
-        public TicketService(IDbContext dbContext, IUnitOfWork unitOfWork, ITicketRepository ticketRepository, IUserRepository userRepository) 
+        public TicketService(IDbContext dbContext, IUnitOfWork unitOfWork,
+            ITicketRepository ticketRepository, IUserRepository userRepository, ICategoryRepository categoryRepository)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));            
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));            
+            _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
+            _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
 
         #endregion
@@ -46,11 +49,11 @@ namespace TechChallenge.Application.Services
             var user = await _userRepository.GetByIdAsync(idUser);
 
             var ticketResult = await (
-                from ticket in _dbContext.Set<Domain.Entities.Ticket, int>().AsNoTracking()
+                from ticket in _dbContext.Set<Ticket, int>().AsNoTracking()
                 join status in _dbContext.Set<TicketStatus, byte>().AsNoTracking()
-                    on ticket.IdStatus equals status.Id                
+                    on ticket.IdStatus equals status.Id
                 join category in _dbContext.Set<Category, int>().AsNoTracking()
-                    on ticket.IdCategory equals category.Id                
+                    on ticket.IdCategory equals category.Id
                 where
                     ticket.Id == idTicket
                 select new DetailedTicketResponse
@@ -70,13 +73,13 @@ namespace TechChallenge.Application.Services
 
             if (ticketResult is null)
                 throw new NotFoundException(DomainErrors.Ticket.NotFound);
-            
+
             if (user.IdRole == (byte)UserRoles.General && ticketResult.IdUserRequester != user.Id)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
             if (user.IdRole == (byte)UserRoles.Analyst && (ticketResult.IdUserRequester != user.Id && ticketResult.IdUserAssigned != user.Id))
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
-            
+
             return ticketResult;
         }
 
@@ -85,11 +88,11 @@ namespace TechChallenge.Application.Services
             var user = await _userRepository.GetByIdAsync(idUser);
 
             IQueryable<TicketResponse> ticketsQuery = (
-                from ticket in _dbContext.Set<Domain.Entities.Ticket, int>().AsNoTracking()
+                from ticket in _dbContext.Set<Ticket, int>().AsNoTracking()
                 join status in _dbContext.Set<TicketStatus, byte>().AsNoTracking()
-                    on ticket.IdStatus equals status.Id                    
+                    on ticket.IdStatus equals status.Id
                 join category in _dbContext.Set<Category, int>().AsNoTracking()
-                    on ticket.IdCategory equals category.Id                    
+                    on ticket.IdCategory equals category.Id
                 select new TicketResponse
                 {
                     IdTicked = ticket.Id,
@@ -119,15 +122,26 @@ namespace TechChallenge.Application.Services
 
         public async Task CreateAsync(int idCategory, int idUserRequester, string description)
         {
-            var ticket = new Ticket(idCategory, idUserRequester, description);
-
-            _ticketRepository.Insert(ticket);
-            await _unitOfWork.SaveChangesAsync();            
+            _ticketRepository.Insert(new Ticket(idCategory, idUserRequester, description));
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(int idTicket, int idCategory, string description)
+        public async Task UpdateAsync(int idTicket, int idCategory, string description, int idUserPerformedAction)
         {
-            throw new NotImplementedException();
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var category = await _categoryRepository.GetByIdAsync(idCategory);
+            if (category is null)
+                throw new NotFoundException(DomainErrors.Category.NotFound);
+
+            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
+            if (ticket is null)
+                throw new NotFoundException(DomainErrors.Ticket.NotFound);
+
+            ticket.Update(category, description, userPerformedAction);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task ChangeStatusAsync(int idTicket, TicketStatuses changedStatus, int idUserPerformedAction)
@@ -139,7 +153,7 @@ namespace TechChallenge.Application.Services
             var ticket = await _ticketRepository.GetByIdAsync(idTicket);
             if (ticket is null)
                 throw new NotFoundException(DomainErrors.Ticket.NotFound);
-                        
+
             ticket.ChangeStatus(changedStatus, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
         }

@@ -51,6 +51,25 @@ namespace TechChallenge.Domain.Entities
 
         #region Public Methods
 
+        public void Update(Category category, string description, User userPerformedAction)
+        {
+            if (category is null)
+                throw new DomainException(DomainErrors.Category.NotFound);
+
+            if (description.IsNullOrEmpty())
+                throw new DomainException(DomainErrors.Ticket.DescriptionIsRequired);
+
+            if (userPerformedAction is null)
+                throw new DomainException(DomainErrors.User.NotFound);
+
+            if (IdUserRequester != userPerformedAction.Id)
+                throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
+            IdCategory = category.Id;
+            Description = description;
+            LastUpdatedBy = userPerformedAction.Id;
+        }
+
         public void AssignTo(User userAssigned, User userPerformedAction)
         {
             if (userAssigned is null || userPerformedAction is null)
@@ -64,7 +83,7 @@ namespace TechChallenge.Domain.Entities
 
             if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
                 throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
-            
+
             IdUserAssigned = userAssigned.Id;
             LastUpdatedBy = userPerformedAction.Id;
             IdStatus = (byte)TicketStatuses.Assigned;
@@ -118,13 +137,13 @@ namespace TechChallenge.Domain.Entities
 
             if (changedStatus == TicketStatuses.New)
                 throw new DomainException(DomainErrors.Ticket.CannotChangeStatusToNew);
-            
+
             if (IdStatus == (byte)TicketStatuses.Cancelled || IdStatus == (byte)TicketStatuses.Completed)
                 throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             if (changedStatus != TicketStatuses.InProgress && changedStatus != TicketStatuses.OnHold && changedStatus != TicketStatuses.Completed)
                 throw new DomainException(DomainErrors.Ticket.StatusNotAllowed);
-            
+
             IdStatus = (byte)changedStatus;
             LastUpdatedBy = userPerformedAction.Id;
         }

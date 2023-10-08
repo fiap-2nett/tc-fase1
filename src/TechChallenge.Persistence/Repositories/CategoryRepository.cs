@@ -5,11 +5,11 @@ using TechChallenge.Persistence.Core.Primitives;
 
 namespace TechChallenge.Persistence.Repositories
 {
-    internal sealed class TicketRepository : GenericRepository<Ticket, int>, ITicketRepository
+    internal sealed class CategoryRepository : GenericRepository<Category, int>, ICategoryRepository
     {
         #region Constructors
 
-        public TicketRepository(IDbContext dbContext)
+        public CategoryRepository(IDbContext dbContext)
             : base(dbContext)
         { }
 
