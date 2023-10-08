@@ -129,6 +129,9 @@ namespace TechChallenge.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AssignTo([FromRoute] int idTicket, [FromBody] AssignToRequest assignToRequest)
         {
+            if (assignToRequest is null)
+                throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
+
             await _ticketService.AssignToUserAsync(idTicket,
                 idUserAssigned: assignToRequest.IdUserAssigned,
                 idUserPerformedAction: _userSessionProvider.IdUser);
@@ -161,6 +164,9 @@ namespace TechChallenge.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> ChangeStatus([FromRoute] int idTicket, [FromBody] ChangeStatusRequest changeStatusRequest)
         {
+            if (changeStatusRequest is null)
+                throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
+
             if (!EnumHelper.TryConvert(changeStatusRequest.IdStatus, out TicketStatuses changedStatus))
                 throw new DomainException(DomainErrors.Ticket.StatusDoesNotExist);
 
