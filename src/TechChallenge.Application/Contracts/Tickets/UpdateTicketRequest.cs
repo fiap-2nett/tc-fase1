@@ -1,9 +1,9 @@
 namespace TechChallenge.Application.Contracts.Tickets
 {
     /// <summary>
-    /// Represents the request ticket.
+    /// Represents the update ticket request.
     /// </summary>
-    public sealed class TicketRequest
+    public sealed class UpdateTicketRequest
     {
         /// <summary>
         /// Gets or sets the category.

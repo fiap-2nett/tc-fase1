@@ -120,10 +120,22 @@ namespace TechChallenge.Application.Services
             return new PagedList<TicketResponse>(ticketsReponsePage, request.Page, request.PageSize, totalCount);
         }
 
-        public async Task CreateAsync(int idCategory, int idUserRequester, string description)
+        public async Task<int> CreateAsync(int idCategory, string description, int idUserRequester)
         {
-            _ticketRepository.Insert(new Ticket(idCategory, idUserRequester, description));
+            var userRequester = await _userRepository.GetByIdAsync(idUserRequester);
+            if (userRequester is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var category = await _categoryRepository.GetByIdAsync(idCategory);
+            if (category is null)
+                throw new NotFoundException(DomainErrors.Category.NotFound);
+
+            var ticket = new Ticket(category, description, userRequester);
+
+            _ticketRepository.Insert(ticket);
             await _unitOfWork.SaveChangesAsync();
+
+            return ticket.Id;
         }
 
         public async Task UpdateAsync(int idTicket, int idCategory, string description, int idUserPerformedAction)
