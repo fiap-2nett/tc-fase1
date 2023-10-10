@@ -69,6 +69,9 @@ namespace TechChallenge.Domain.Entities
             if (IdUserRequester != userPerformedAction.Id)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
+            if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
+                throw new InvalidPermissionException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+
             IdCategory = category.Id;
             Description = description;
             LastUpdatedBy = userPerformedAction.Id;
