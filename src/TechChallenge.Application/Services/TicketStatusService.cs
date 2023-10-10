@@ -10,7 +10,7 @@ using TechChallenge.Domain.Entities;
 
 namespace TechChallenge.Application.Services
 {
-    public sealed class TicketStatusService : ITicketStatusService
+    internal sealed class TicketStatusService : ITicketStatusService
     {
         #region Read-Only Fields
 
