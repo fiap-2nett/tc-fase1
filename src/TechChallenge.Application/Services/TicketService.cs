@@ -44,9 +44,11 @@ namespace TechChallenge.Application.Services
 
         #region ITicketService Members
 
-        public async Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket, int idUser)
+        public async Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket, int idUserPerformedAction)
         {
-            var user = await _userRepository.GetByIdAsync(idUser);
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
 
             var ticketResult = await (
                 from ticket in _dbContext.Set<Ticket, int>().AsNoTracking()
@@ -58,7 +60,7 @@ namespace TechChallenge.Application.Services
                     ticket.Id == idTicket
                 select new DetailedTicketResponse
                 {
-                    IdTicked = ticket.Id,
+                    IdTicket = ticket.Id,
                     Description = ticket.Description,
                     Status = new StatusResponse { IdStatus = status.Id, Name = status.Name },
                     Category = new CategoryReponse { IdCategory = category.Id, Name = category.Name },
@@ -74,18 +76,20 @@ namespace TechChallenge.Application.Services
             if (ticketResult is null)
                 throw new NotFoundException(DomainErrors.Ticket.NotFound);
 
-            if (user.IdRole == (byte)UserRoles.General && ticketResult.IdUserRequester != user.Id)
+            if (userPerformedAction.IdRole == (byte)UserRoles.General && ticketResult.IdUserRequester != userPerformedAction.Id)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
-            if (user.IdRole == (byte)UserRoles.Analyst && (ticketResult.IdUserRequester != user.Id && ticketResult.IdUserAssigned != user.Id))
+            if (userPerformedAction.IdRole == (byte)UserRoles.Analyst && (ticketResult.IdUserRequester != userPerformedAction.Id && ticketResult.IdUserAssigned != userPerformedAction.Id))
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
             return ticketResult;
         }
 
-        public async Task<PagedList<TicketResponse>> GetTicketsAsync(GetTicketsRequest request, int idUser)
+        public async Task<PagedList<TicketResponse>> GetTicketsAsync(GetTicketsRequest request, int idUserPerformedAction)
         {
-            var user = await _userRepository.GetByIdAsync(idUser);
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
 
             IQueryable<TicketResponse> ticketsQuery = (
                 from ticket in _dbContext.Set<Ticket, int>().AsNoTracking()
@@ -95,7 +99,7 @@ namespace TechChallenge.Application.Services
                     on ticket.IdCategory equals category.Id
                 select new TicketResponse
                 {
-                    IdTicked = ticket.Id,
+                    IdTicket = ticket.Id,
                     Description = ticket.Description,
                     Status = new StatusResponse { IdStatus = status.Id, Name = status.Name },
                     Category = new CategoryReponse { IdCategory = category.Id, Name = category.Name },
@@ -104,11 +108,11 @@ namespace TechChallenge.Application.Services
                 }
             );
 
-            if (user.IdRole == (byte)UserRoles.General)
-                ticketsQuery = ticketsQuery.Where(t => t.IdUserRequester == user.Id);
+            if (userPerformedAction.IdRole == (byte)UserRoles.General)
+                ticketsQuery = ticketsQuery.Where(t => t.IdUserRequester == userPerformedAction.Id);
 
-            if (user.IdRole == (byte)UserRoles.Analyst)
-                ticketsQuery = ticketsQuery.Where(t => t.IdUserRequester == user.Id || t.IdUserAssigned == user.Id);
+            if (userPerformedAction.IdRole == (byte)UserRoles.Analyst)
+                ticketsQuery = ticketsQuery.Where(t => t.IdUserRequester == userPerformedAction.Id || t.IdUserAssigned == userPerformedAction.Id || t.IdUserAssigned == null);
 
             var totalCount = await ticketsQuery.CountAsync();
 

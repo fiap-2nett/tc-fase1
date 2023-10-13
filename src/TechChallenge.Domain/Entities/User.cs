@@ -10,7 +10,7 @@ using TechChallenge.Domain.Exceptions;
 
 namespace TechChallenge.Domain.Entities
 {
-    public sealed class User : AggregateRoot<int>, IAuditableEntity, ISoftDeletableEntity
+    public class User : AggregateRoot<int>, IAuditableEntity, ISoftDeletableEntity
     {
         #region Private Fields
 

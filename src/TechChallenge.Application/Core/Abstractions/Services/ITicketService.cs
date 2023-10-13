@@ -9,8 +9,8 @@ namespace TechChallenge.Application.Core.Abstractions.Services
     {
         #region ITicketService Members
 
-        Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket, int idUser);
-        Task<PagedList<TicketResponse>> GetTicketsAsync(GetTicketsRequest request, int idUser);
+        Task<DetailedTicketResponse> GetTicketByIdAsync(int idTicket, int idUserPerformedAction);
+        Task<PagedList<TicketResponse>> GetTicketsAsync(GetTicketsRequest request, int idUserPerformedAction);
         Task<int> CreateAsync(int idCategory, string description, int idUserRequester);
         Task UpdateAsync(int idTicket, int idCategory, string description, int idUserPerformedAction);
         Task ChangeStatusAsync(int idTicket, TicketStatuses changedStatus, int idUserPerformedAction);
