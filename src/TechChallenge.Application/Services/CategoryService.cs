@@ -10,7 +10,7 @@ using TechChallenge.Domain.Entities;
 
 namespace TechChallenge.Application.Services
 {
-    public sealed class CategoryService : ICategoryService
+    internal sealed class CategoryService : ICategoryService
     {
         #region Read-Only Fields
 

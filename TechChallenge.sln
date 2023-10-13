@@ -13,15 +13,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infrastructure", "4 - Infrastructure", "{62F9D203-4B32-4622-8241-1CA304BB1717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Domain", "src\TechChallenge.Domain\TechChallenge.Domain.csproj", "{D320DD07-B302-426C-8C70-956780FE406D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Domain", "src\TechChallenge.Domain\TechChallenge.Domain.csproj", "{D320DD07-B302-426C-8C70-956780FE406D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Application", "src\TechChallenge.Application\TechChallenge.Application.csproj", "{56F402E8-684C-4950-B9B8-2E734F30DF23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Application", "src\TechChallenge.Application\TechChallenge.Application.csproj", "{56F402E8-684C-4950-B9B8-2E734F30DF23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Infrastructure", "src\TechChallenge.Infrastructure\TechChallenge.Infrastructure.csproj", "{A4B2DCA3-7A05-4576-882B-D4713270BC51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Infrastructure", "src\TechChallenge.Infrastructure\TechChallenge.Infrastructure.csproj", "{A4B2DCA3-7A05-4576-882B-D4713270BC51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Persistence", "src\TechChallenge.Persistence\TechChallenge.Persistence.csproj", "{726394DF-FD14-4084-8477-FA59BEF143A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Persistence", "src\TechChallenge.Persistence\TechChallenge.Persistence.csproj", "{726394DF-FD14-4084-8477-FA59BEF143A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Api", "src\TechChallenge.Api\TechChallenge.Api.csproj", "{E44EB6A4-821E-46D6-8EEA-72E042F6B8EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Api", "src\TechChallenge.Api\TechChallenge.Api.csproj", "{E44EB6A4-821E-46D6-8EEA-72E042F6B8EC}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{82C738EC-470E-419B-9A34-30C2B6B08D8C}"
 EndProject
@@ -33,6 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		nuget.config = nuget.config
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DF6DDD9F-8D47-412F-9FB5-FE8DB0588D94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.ArchitectureTests", "tests\TechChallenge.ArchitectureTests\TechChallenge.ArchitectureTests.csproj", "{F0388FEE-FD35-4580-9315-651A103A581B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +68,10 @@ Global
 		{82C738EC-470E-419B-9A34-30C2B6B08D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82C738EC-470E-419B-9A34-30C2B6B08D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82C738EC-470E-419B-9A34-30C2B6B08D8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0388FEE-FD35-4580-9315-651A103A581B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0388FEE-FD35-4580-9315-651A103A581B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0388FEE-FD35-4580-9315-651A103A581B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0388FEE-FD35-4580-9315-651A103A581B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +86,7 @@ Global
 		{A4B2DCA3-7A05-4576-882B-D4713270BC51} = {62F9D203-4B32-4622-8241-1CA304BB1717}
 		{726394DF-FD14-4084-8477-FA59BEF143A2} = {62F9D203-4B32-4622-8241-1CA304BB1717}
 		{E44EB6A4-821E-46D6-8EEA-72E042F6B8EC} = {ABD09617-2513-4B68-91EB-616A828D1E40}
+		{F0388FEE-FD35-4580-9315-651A103A581B} = {DF6DDD9F-8D47-412F-9FB5-FE8DB0588D94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1901C1E9-1D42-41EC-B158-D54D8B4C12D9}
