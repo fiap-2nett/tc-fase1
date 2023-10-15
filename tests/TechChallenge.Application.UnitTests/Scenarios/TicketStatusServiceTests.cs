@@ -33,6 +33,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
         #region Unit Tests
 
+        #region GetAsync
+
         [Fact]
         public async Task GetAsync_Should_ReturnStatusResponseEnumerableAsync()
         {
@@ -51,6 +53,10 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             testResult.All(c => !c.Name.IsNullOrWhiteSpace()).Should().BeTrue();
         }
 
+        #endregion
+
+        #region GetByIdAsync
+
         [Fact]
         public async Task GetByIdAsync_Should_ReturnStatusResponseAsync()
         {
@@ -68,6 +74,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             testResult.IdStatus.Should().Be(expectedResult.Id);
             testResult.Name.Should().Be(expectedResult.Name);
         }
+
+        #endregion
 
         #endregion
 

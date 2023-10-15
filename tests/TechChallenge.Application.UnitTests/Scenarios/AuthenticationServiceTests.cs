@@ -44,6 +44,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
         #region Unit Tests
 
+        #region Login
+
         [Fact]
         public async Task Login_Should_ReturnTokenResponseAsync_WithValidCredentials()
         {
@@ -93,6 +95,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
                 .ThrowAsync<DomainException>()
                 .WithMessage(DomainErrors.Authentication.InvalidEmailOrPassword.Message);
         }
+
+        #endregion
 
         #endregion
 
