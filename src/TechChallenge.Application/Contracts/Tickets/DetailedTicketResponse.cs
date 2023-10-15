@@ -11,7 +11,7 @@ namespace TechChallenge.Application.Contracts.Tickets
         /// <summary>
         /// Gets or sets the ticket identifier.
         /// </summary>
-        public int IdTicked { get; set; }
+        public int IdTicket { get; set; }
 
         /// <summary>
         /// Gets or sets the ticket description.

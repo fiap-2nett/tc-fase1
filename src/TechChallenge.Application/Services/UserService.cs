@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TechChallenge.Application.Contracts.Authentication;
@@ -110,7 +111,7 @@ namespace TechChallenge.Application.Services
                 }
             );
 
-            return await userQuery.SingleOrDefaultAsync();
+            return await userQuery.FirstOrDefaultAsync();
         }
 
         public async Task<PagedList<UserResponse>> GetUsersAsync(GetUsersRequest request)

@@ -8,7 +8,7 @@ using TechChallenge.Domain.Extensions;
 
 namespace TechChallenge.Domain.Entities
 {
-    public sealed class Ticket : AggregateRoot<int>, IAuditableEntity, ISoftDeletableEntity
+    public class Ticket : AggregateRoot<int>, IAuditableEntity, ISoftDeletableEntity
     {
         #region Properties
 
