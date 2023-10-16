@@ -33,6 +33,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
         #region Unit Tests
 
+        #region GetAsync
+
         [Fact]
         public async Task GetAsync_Should_ReturnDetailedCategoryResponseEnumerableAsync()
         {
@@ -76,6 +78,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             testResult.Priority.Id.Should().Be(PriorityList().FirstOrDefault(p => p.Id == expectedResult.IdPriority).Id);
             testResult.Priority.Name.Should().Be(PriorityList().FirstOrDefault(p => p.Id == expectedResult.IdPriority).Name);
         }
+
+        #endregion
 
         #endregion
 

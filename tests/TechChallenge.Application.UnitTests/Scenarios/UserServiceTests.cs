@@ -55,6 +55,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
         #region Unit Tests
 
+        #region CreateAsync
+
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
@@ -191,6 +193,10 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(default), Times.Once);
         }
 
+        #endregion
+
+        #region ChangePasswordAsync
+
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
@@ -255,6 +261,10 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(default), Times.Once());
         }
 
+        #endregion
+
+        #region UpdateUserAsync
+
         [Theory]
         [InlineData("", "")]
         [InlineData(" ", " ")]
@@ -315,6 +325,10 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(default), Times.Once());
         }
 
+        #endregion
+
+        #region GetUserByIdAsync
+
         [Fact]
         public async Task GetUserByIdAsync_Should_ReturnNullUserResponse_WhenInvalidIdUser()
         {
@@ -359,6 +373,10 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             testResult.CreatedAt.Date.Should().Be(expectedUser.CreatedAt.Date);
         }
 
+        #endregion
+
+        #region GetUsersAsync
+
         [Fact]
         public async Task GetUsersAsync_Should_ReturnUserResponsePagedList_WhenValidParameters()
         {
@@ -400,6 +418,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             testResult.Items.IsNullOrEmpty().Should().BeTrue();
             testResult.TotalCount.Should().Be(testResult.Items.Count);
         }
+
+        #endregion
 
         #endregion
 
