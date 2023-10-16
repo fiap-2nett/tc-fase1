@@ -96,32 +96,16 @@ POST /authentication/register
 
 *Observação: para novos usuários será atribuído o perfil Geral.*
 
-### Testes unitários
+### Testes unitários e arquiteturais
 
-Para executar os testes unitários através do dotnet CLI, no diretório raíz do projeto execute o seguinte comando:
+Para executar os testes unitários e arquiteturais através do dotnet CLI, no diretório raíz do projeto execute o seguinte comando:
 
 ```sh
-$ dotnet test tests/TechChallenge.Application.UnitTests/TechChallenge.Application.UnitTests.csproj
+$ dotnet test TechChallenge.sln
 ```
 
 Caso queria uma versão de resultado com mais detalhes, execute o seguinte comando:
 
 ```sh
-$ dotnet test --logger "console;verbosity=detailed" tests/TechChallenge.Application.UnitTests/TechChallenge.Application.UnitTests.csproj
+$ dotnet test --logger "console;verbosity=detailed" TechChallenge.sln
 ```
-
-### Testes de arquitetura
-
-Para executar os testes de arquitetura através do dotnet CLI, no diretório raíz do projeto execute o seguinte comando:
-
-```sh
-$ dotnet test tests/TechChallenge.ArchitectureTests/TechChallenge.ArchitectureTests.csproj
-```
-
-Caso queria uma versão de resultado com mais detalhes, execute o seguinte comando:
-
-```sh
-$ dotnet test --logger "console;verbosity=detailed" tests/TechChallenge.ArchitectureTests/TechChallenge.ArchitectureTests.csproj
-```
-
-
