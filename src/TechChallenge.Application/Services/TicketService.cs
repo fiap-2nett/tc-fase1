@@ -13,6 +13,7 @@ using TechChallenge.Application.Contracts.Tickets;
 using TechChallenge.Application.Contracts.Category;
 using TechChallenge.Application.Core.Abstractions.Data;
 using TechChallenge.Application.Core.Abstractions.Services;
+using static TechChallenge.Domain.Errors.DomainErrors;
 
 namespace TechChallenge.Application.Services
 {
@@ -160,6 +161,24 @@ namespace TechChallenge.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task CancelAsync(int idTicket, int idCategory, string description, int idUserPerformedAction)
+        {
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var category = await _categoryRepository.GetByIdAsync(idCategory);
+            if (category is null)
+                throw new NotFoundException(DomainErrors.Category.NotFound);
+
+            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
+            if (ticket is null)
+                throw new NotFoundException(DomainErrors.Ticket.NotFound);
+
+            ticket.Update(category, description, userPerformedAction);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task ChangeStatusAsync(int idTicket, TicketStatuses changedStatus, int idUserPerformedAction)
         {
             var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
@@ -172,12 +191,7 @@ namespace TechChallenge.Application.Services
 
             ticket.ChangeStatus(changedStatus, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task CancelAsync(int idTicket, string cancellationReason)
-        {
-            throw new NotImplementedException();
-        }
+        }        
 
         public async Task AssignToUserAsync(int idTicket, int idUserAssigned, int idUserPerformedAction)
         {
