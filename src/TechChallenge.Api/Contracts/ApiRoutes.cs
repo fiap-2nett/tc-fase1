@@ -32,6 +32,7 @@ namespace TechChallenge.Api.Contracts
             public const string Complete = "tickets/{idTicket:int}/complete";
             public const string ChangeStatus = "tickets/{idTicket:int}/change-status";
             public const string Update = "tickets/{idTicket:int}";
+            public const string Cancel = "tickets/{idTicket:int}/cancel";
         }
 
         public static class TicketStatus

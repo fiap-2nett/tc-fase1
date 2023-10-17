@@ -132,6 +132,10 @@ namespace TechChallenge.Domain.Errors
             public static Error DescriptionIsRequired = new Error(
                 "Ticket.DescriptionIsRequired",
                 "The ticket description is required.");
+
+            public static Error CannotBeCancelledByThisUser => new Error(
+                "Ticket.CannotBeCancelledByThisUser",
+                "The ticket cannot be cancelled by this user.");
         }
 
         public static class Category

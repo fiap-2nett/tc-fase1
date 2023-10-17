@@ -160,6 +160,20 @@ namespace TechChallenge.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task CancelAsync(int idTicket, string cancellationReason, int idUserPerformedAction)
+        {
+            var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
+            if (userPerformedAction is null)
+                throw new NotFoundException(DomainErrors.User.NotFound);
+
+            var ticket = await _ticketRepository.GetByIdAsync(idTicket);
+            if (ticket is null)
+                throw new NotFoundException(DomainErrors.Ticket.NotFound);
+
+            ticket.Cancel(cancellationReason, userPerformedAction);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task ChangeStatusAsync(int idTicket, TicketStatuses changedStatus, int idUserPerformedAction)
         {
             var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
@@ -172,11 +186,6 @@ namespace TechChallenge.Application.Services
 
             ticket.ChangeStatus(changedStatus, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task CancelAsync(int idTicket, string cancellationReason)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task AssignToUserAsync(int idTicket, int idUserAssigned, int idUserPerformedAction)

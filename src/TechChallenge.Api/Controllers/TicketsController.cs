@@ -119,6 +119,27 @@ namespace TechChallenge.Api.Controllers
         }
 
         /// <summary>
+        /// Represents the request to cancel the ticket.
+        /// </summary>
+        /// <param name="idTicket">The ticket identifier.</param>
+        /// <param name="cancelTicketRequest">Represents the request to cancel the ticket.</param>
+        [HttpPost(ApiRoutes.Tickets.Cancel)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Cancel([FromRoute] int idTicket, [FromBody] CancelTicketRequest cancelTicketRequest)
+        {
+            if (cancelTicketRequest is null)
+                throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
+
+            await _ticketService.CancelAsync(idTicket,
+                cancelTicketRequest.CancellationReason,
+                idUserPerformedAction: _userSessionProvider.IdUser);
+
+            return Ok();
+        }
+
+        /// <summary>
         /// Represents the request to assign the ticket to other users.
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
