@@ -133,8 +133,7 @@ namespace TechChallenge.Api.Controllers
                 throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
 
             await _ticketService.CancelAsync(idTicket,
-                cancelTicketRequest.IdCategory,
-                cancelTicketRequest.Description,
+                cancelTicketRequest.CancellationReason,                
                 idUserPerformedAction: _userSessionProvider.IdUser);
 
             return Ok();

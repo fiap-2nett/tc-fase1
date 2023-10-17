@@ -160,7 +160,7 @@ namespace TechChallenge.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task CancelAsync(int idTicket, int idCategory, string cancellationReason, int idUserPerformedAction)
+        public async Task CancelAsync(int idTicket, string cancellationReason, int idUserPerformedAction)
         {
             var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
             if (userPerformedAction is null)
