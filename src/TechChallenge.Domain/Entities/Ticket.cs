@@ -159,7 +159,7 @@ namespace TechChallenge.Domain.Entities
 
             IdStatus = (byte)changedStatus;
             LastUpdatedBy = userPerformedAction.Id;
-        }
+        }       
 
         #endregion
     }

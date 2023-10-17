@@ -13,7 +13,6 @@ using TechChallenge.Application.Contracts.Tickets;
 using TechChallenge.Application.Contracts.Category;
 using TechChallenge.Application.Core.Abstractions.Data;
 using TechChallenge.Application.Core.Abstractions.Services;
-using static TechChallenge.Domain.Errors.DomainErrors;
 
 namespace TechChallenge.Application.Services
 {
@@ -161,21 +160,17 @@ namespace TechChallenge.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task CancelAsync(int idTicket, int idCategory, string description, int idUserPerformedAction)
+        public async Task CancelAsync(int idTicket, int idCategory, string cancellationReason, int idUserPerformedAction)
         {
             var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
             if (userPerformedAction is null)
-                throw new NotFoundException(DomainErrors.User.NotFound);
-
-            var category = await _categoryRepository.GetByIdAsync(idCategory);
-            if (category is null)
-                throw new NotFoundException(DomainErrors.Category.NotFound);
+                throw new NotFoundException(DomainErrors.User.NotFound);            
 
             var ticket = await _ticketRepository.GetByIdAsync(idTicket);
             if (ticket is null)
                 throw new NotFoundException(DomainErrors.Ticket.NotFound);
 
-            ticket.Update(category, description, userPerformedAction);
+            ticket.Cancel(cancellationReason, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
         }
 
