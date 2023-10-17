@@ -123,7 +123,7 @@ namespace TechChallenge.Api.Controllers
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
         /// <param name="cancelTicketRequest">Represents the request to cancel the ticket.</param>
-        [HttpPut(ApiRoutes.Tickets.Cancel)]
+        [HttpPost(ApiRoutes.Tickets.Cancel)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -133,7 +133,7 @@ namespace TechChallenge.Api.Controllers
                 throw new DomainException(DomainErrors.Ticket.DataSentIsInvalid);
 
             await _ticketService.CancelAsync(idTicket,
-                cancelTicketRequest.CancellationReason,                
+                cancelTicketRequest.CancellationReason,
                 idUserPerformedAction: _userSessionProvider.IdUser);
 
             return Ok();

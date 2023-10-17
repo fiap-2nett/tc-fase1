@@ -107,11 +107,17 @@ namespace TechChallenge.Domain.Entities
             if (userPerformedAction is null)
                 throw new DomainException(DomainErrors.User.NotFound);
 
-            if (userPerformedAction.IdRole == (byte)UserRoles.General)
-                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCompletedByThisUser);
+            if (userPerformedAction.IdRole == (byte)UserRoles.General && IdUserRequester != userPerformedAction.Id)
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCancelledByThisUser);
+
+            if (userPerformedAction.IdRole == (byte)UserRoles.Analyst && (IdUserAssigned != userPerformedAction.Id && IdUserRequester != userPerformedAction.Id))
+                throw new InvalidPermissionException(DomainErrors.Ticket.CannotBeCancelledByThisUser);
 
             if (cancellationReason.IsNullOrWhiteSpace())
                 throw new DomainException(DomainErrors.Ticket.CancellationReasonIsRequired);
+
+            if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
+                throw new InvalidPermissionException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             CancellationReason = cancellationReason;
             LastUpdatedBy = userPerformedAction.Id;
@@ -159,7 +165,7 @@ namespace TechChallenge.Domain.Entities
 
             IdStatus = (byte)changedStatus;
             LastUpdatedBy = userPerformedAction.Id;
-        }       
+        }
 
         #endregion
     }

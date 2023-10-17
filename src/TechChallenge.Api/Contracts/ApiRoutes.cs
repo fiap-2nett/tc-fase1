@@ -40,7 +40,5 @@ namespace TechChallenge.Api.Contracts
             public const string Get = "ticketstatus";
             public const string GetById = "ticketstatus/{idTicketStatus:int}";
         }
-
-        
     }
 }

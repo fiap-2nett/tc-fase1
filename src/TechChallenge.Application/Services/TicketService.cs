@@ -164,7 +164,7 @@ namespace TechChallenge.Application.Services
         {
             var userPerformedAction = await _userRepository.GetByIdAsync(idUserPerformedAction);
             if (userPerformedAction is null)
-                throw new NotFoundException(DomainErrors.User.NotFound);            
+                throw new NotFoundException(DomainErrors.User.NotFound);
 
             var ticket = await _ticketRepository.GetByIdAsync(idTicket);
             if (ticket is null)
@@ -186,7 +186,7 @@ namespace TechChallenge.Application.Services
 
             ticket.ChangeStatus(changedStatus, userPerformedAction);
             await _unitOfWork.SaveChangesAsync();
-        }        
+        }
 
         public async Task AssignToUserAsync(int idTicket, int idUserAssigned, int idUserPerformedAction)
         {

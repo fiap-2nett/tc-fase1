@@ -6,7 +6,7 @@ namespace TechChallenge.Application.Contracts.Tickets
     public sealed class CancelTicketRequest
     {        
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets or sets the cancellation reason.
         /// </summary>
         public string CancellationReason { get; set; }
     }
