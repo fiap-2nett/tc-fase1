@@ -50,6 +50,24 @@ A solução do HelpDesk API é composta pelos seguintes projetos:
 | _TechChallenge.Application.UnitTests_ | Contém a implementação dos testes unitários focados nas classes de serviço.             |
 | _TechChallenge.ArchitectureTests_     | Contém a implementação dos testes de arquitetura.                                       |
 
+## Modelagem de dados
+
+A HelpDesk API utiliza o paradigma de CodeFirst através dos recursos disponibilizados pelo Entity Framework, no entanto para melhor
+entendimento da modelagem de dados apresentamos a seguir o MER e suas respectivas definições:
+
+![image](https://github.com/fiap-2nett/tc-fase1/assets/57924071/5471b1a1-d991-467f-be6e-785f6bb74211)
+
+Com base na imagem acima iremos detalhar as tabelas e os dados contidos em cada uma delas:
+
+| Schema | Tabela       | Descrição                                                                                       |
+|--------|--------------|-------------------------------------------------------------------------------------------------|
+| dbo    | users        | Tabela que contém os dados referentes aos usuários da plataforma.                               |
+| dbo    | roles        | Tabela que contém os dados referentes aos tipos de perfis de usuário da plataforma.             |
+| dbo    | tickets      | Tabela que contém os dados referentes aos tickets criados na plataforma.                        |
+| dbo    | ticketstatus | Tabela que contém os dados referentes aos possíveis status de tickets.                          |
+| dbo    | categories   | Tabela que contém os dados referentes as categorias de tickets.                                 |
+| dbo    | priorities   | Tabela que contém os dados referentes as prioridades/SLAs relacionado as categorias de tickets. |
+
 ## Como executar
 
 A HelpDesk API utiliza como banco de dados o SQL Server 2019 ou superior, toda a infraestrtura necessária para execução do projeto
