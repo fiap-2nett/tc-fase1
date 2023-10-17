@@ -119,11 +119,11 @@ namespace TechChallenge.Api.Controllers
         }
 
         /// <summary>
-        /// Represents the request to update the ticket.
+        /// Represents the request to cancel the ticket.
         /// </summary>
         /// <param name="idTicket">The ticket identifier.</param>
-        /// <param name="cancelTicketRequest">Represents the request to update the ticket.</param>
-        [HttpPut(ApiRoutes.Tickets.Update)]
+        /// <param name="cancelTicketRequest">Represents the request to cancel the ticket.</param>
+        [HttpPut(ApiRoutes.Tickets.Cancel)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
