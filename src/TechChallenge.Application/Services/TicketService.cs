@@ -63,7 +63,7 @@ namespace TechChallenge.Application.Services
                     IdTicket = ticket.Id,
                     Description = ticket.Description,
                     Status = new StatusResponse { IdStatus = status.Id, Name = status.Name },
-                    Category = new CategoryReponse { IdCategory = category.Id, Name = category.Name },
+                    Category = new CategoryResponse { IdCategory = category.Id, Name = category.Name },
                     IdUserRequester = ticket.IdUserRequester,
                     IdUserAssigned = ticket.IdUserAssigned,
                     CreatedAt = ticket.CreatedAt,
@@ -102,7 +102,7 @@ namespace TechChallenge.Application.Services
                     IdTicket = ticket.Id,
                     Description = ticket.Description,
                     Status = new StatusResponse { IdStatus = status.Id, Name = status.Name },
-                    Category = new CategoryReponse { IdCategory = category.Id, Name = category.Name },
+                    Category = new CategoryResponse { IdCategory = category.Id, Name = category.Name },
                     IdUserRequester = ticket.IdUserRequester,
                     IdUserAssigned = ticket.IdUserAssigned
                 }

@@ -8,7 +8,7 @@ namespace TechChallenge.Application.Core.Abstractions.Services
     {
         #region ICategoryService Members
 
-        Task<IEnumerable<DetailedCategoryResponse>> GetAsync();
+        Task<IEnumerable<CategoryResponse>> GetAsync();
         Task<DetailedCategoryResponse> GetByIdAsync(int idCategory);
 
         #endregion

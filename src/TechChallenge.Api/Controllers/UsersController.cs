@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using TechChallenge.Api.Contracts;
 using TechChallenge.Api.Infrastructure;
-using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Contracts.Users;
-using TechChallenge.Application.Core.Abstractions.Authentication;
+using TechChallenge.Application.Contracts.Common;
 using TechChallenge.Application.Core.Abstractions.Services;
+using TechChallenge.Application.Core.Abstractions.Authentication;
 
 namespace TechChallenge.Api.Controllers
 {
@@ -40,13 +40,13 @@ namespace TechChallenge.Api.Controllers
         /// <returns>The paged list of the users.</returns>
         [HttpGet(ApiRoutes.Users.Get)]
         [ProducesResponseType(typeof(PagedList<UserResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(int page, int pageSize)
+        public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
             => Ok(await _userService.GetUsersAsync(new GetUsersRequest(page, pageSize)));
 
         /// <summary>
         /// Represents the query for getting a user authenticated.
         /// </summary>
-        /// <returns>The user authenticated info.</returns>        
+        /// <returns>The user authenticated info.</returns>
         [HttpGet(ApiRoutes.Users.GetMyProfile)]
         [ProducesResponseType(typeof(DetailedUserResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMyProfile()
@@ -56,7 +56,7 @@ namespace TechChallenge.Api.Controllers
         /// Represents the change password request.
         /// </summary>
         /// <param name="changePasswordRequest">Represents the change password request.</param>
-        /// <returns></returns>        
+        /// <returns></returns>
         [HttpPut(ApiRoutes.Users.ChangePassword)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
@@ -70,7 +70,7 @@ namespace TechChallenge.Api.Controllers
         /// Represents the update user request.
         /// </summary>
         /// <param name="updateUserRequest">Represents the update user request.</param>
-        /// <returns></returns>        
+        /// <returns></returns>
         [HttpPut(ApiRoutes.Users.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]

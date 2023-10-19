@@ -68,8 +68,11 @@ namespace TechChallenge.Domain.Entities
 
         public void ChangeName(string name, string surname)
         {
-            Ensure.NotEmpty(name, "The name is required.", nameof(name));
-            Ensure.NotEmpty(surname, "The surname is required.", nameof(surname));
+            if (name.IsNullOrWhiteSpace())
+                throw new DomainException(DomainErrors.User.NameIsRequired);
+
+            if (surname.IsNullOrWhiteSpace())
+                throw new DomainException(DomainErrors.User.SurnameIsRequired);
 
             Name = name;
             Surname = surname;            

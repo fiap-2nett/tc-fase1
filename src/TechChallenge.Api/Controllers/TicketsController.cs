@@ -44,7 +44,7 @@ namespace TechChallenge.Api.Controllers
         /// <returns>The paged list of the tickets.</returns>
         [HttpGet(ApiRoutes.Tickets.Get)]
         [ProducesResponseType(typeof(PagedList<TicketResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(int page, int pageSize)
+        public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
             => Ok(await _ticketService.GetTicketsAsync(new GetTicketsRequest(page, pageSize), _userSessionProvider.IdUser));
 
         /// <summary>

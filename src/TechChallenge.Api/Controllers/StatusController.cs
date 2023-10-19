@@ -44,7 +44,7 @@ namespace TechChallenge.Api.Controllers
         [HttpGet(ApiRoutes.TicketStatus.GetById)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get([FromRoute] int idTicketStatus)
+        public async Task<IActionResult> Get([FromRoute] byte idTicketStatus)
         {
             var response = await _ticketStatusService.GetByIdAsync(idTicketStatus);
             if (response is null) return NotFound();

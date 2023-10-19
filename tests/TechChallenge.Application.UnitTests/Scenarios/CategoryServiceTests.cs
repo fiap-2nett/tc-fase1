@@ -36,7 +36,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
         #region GetAsync
 
         [Fact]
-        public async Task GetAsync_Should_ReturnDetailedCategoryResponseEnumerableAsync()
+        public async Task GetAsync_Should_ReturnCategoryResponseEnumerableAsync()
         {
             // Arrange
             _dbContextMock.Setup(x => x.Set<Category, int>()).ReturnsDbSet(CategoryList());
@@ -50,9 +50,8 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             // Assert
             testResult.Should().NotBeNull();
             testResult.Should().HaveCount(CategoryList().Count());
-            testResult.All(c => c.Id > 0).Should().BeTrue();
+            testResult.All(c => c.IdCategory > 0).Should().BeTrue();
             testResult.All(c => !c.Name.IsNullOrWhiteSpace()).Should().BeTrue();
-            testResult.All(c => c.Priority is not null).Should().BeTrue();
         }
 
         [Fact]
@@ -70,12 +69,11 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(expectedResult.Id);
-            testResult.Name.Should().Be(expectedResult.Name);
-            testResult.CreatedAt.Should().Be(expectedResult.CreatedAt);
+            testResult.IdCategory.Should().Be(expectedResult.Id);
+            testResult.Name.Should().Be(expectedResult.Name);            
 
             testResult.Priority.Should().NotBeNull();
-            testResult.Priority.Id.Should().Be(PriorityList().FirstOrDefault(p => p.Id == expectedResult.IdPriority).Id);
+            testResult.Priority.IdPriority.Should().Be(PriorityList().FirstOrDefault(p => p.Id == expectedResult.IdPriority).Id);
             testResult.Priority.Name.Should().Be(PriorityList().FirstOrDefault(p => p.Id == expectedResult.IdPriority).Name);
         }
 

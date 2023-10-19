@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TechChallenge.Domain.Entities;
 using TechChallenge.Application.Contracts.Category;
 using TechChallenge.Application.Core.Abstractions.Data;
 using TechChallenge.Application.Core.Abstractions.Services;
-using TechChallenge.Domain.Entities;
 
 namespace TechChallenge.Application.Services
 {
@@ -29,18 +29,14 @@ namespace TechChallenge.Application.Services
 
         #region ICategoryService Members
 
-        public async Task<IEnumerable<DetailedCategoryResponse>> GetAsync()
+        public async Task<IEnumerable<CategoryResponse>> GetAsync()
         {
-            IQueryable<DetailedCategoryResponse> categoriesQuery = (
+            IQueryable<CategoryResponse> categoriesQuery = (
                 from category in _dbContext.Set<Category, int>().AsNoTracking()
-                join priority in _dbContext.Set<Priority, byte>().AsNoTracking()
-                    on category.IdPriority equals priority.Id
-                select new DetailedCategoryResponse
+                select new CategoryResponse
                 {
-                    Id= category.Id,
-                    Name= category.Name,
-                    CreatedAt= category.CreatedAt,
-                    Priority = new PriorityResponse { Id = priority.Id, Name = priority.Name }
+                    IdCategory = category.Id,
+                    Name = category.Name
                 }
             );
 
@@ -57,10 +53,9 @@ namespace TechChallenge.Application.Services
                     category.Id == idCategory
                 select new DetailedCategoryResponse
                 {
-                    Id = category.Id,
+                    IdCategory = category.Id,
                     Name = category.Name,
-                    CreatedAt = category.CreatedAt,
-                    Priority = new PriorityResponse { Id = priority.Id, Name = priority.Name }
+                    Priority = new PriorityResponse { IdPriority = priority.Id, Name = priority.Name }
                 }
             );
 

@@ -43,12 +43,12 @@ namespace TechChallenge.Application.Services
             return await ticketStatusQuery.ToListAsync();
         }
 
-        public async Task<StatusResponse> GetByIdAsync(int statusId)
+        public async Task<StatusResponse> GetByIdAsync(byte idTicketStatus)
         {
             IQueryable<StatusResponse> ticketStatusQuery = (
                 from ticketStatus in _dbContext.Set<TicketStatus, byte>().AsNoTracking()
                 where
-                    ticketStatus.Id == statusId
+                    ticketStatus.Id == idTicketStatus
                 select new StatusResponse
                 {
                     IdStatus = ticketStatus.Id,

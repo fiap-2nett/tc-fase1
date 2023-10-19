@@ -26,4 +26,8 @@
     <ProjectReference Include="..\TechChallenge.Persistence\TechChallenge.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="TechChallenge.Api.IntegrationTests" />
+  </ItemGroup>
+
 </Project>
