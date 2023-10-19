@@ -643,7 +643,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
             // Assert
             await action.Should()
-                .ThrowAsync<InvalidPermissionException>()
+                .ThrowAsync<DomainException>()
                 .WithMessage(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled.Message);
 
             _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
@@ -904,7 +904,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             var targetTicket = TicketList().FirstOrDefault();
             var idUserAssigned = int.MaxValue;
             var idUserPerformedAction = Admin.Id;
-            
+
             _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
 
             var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
@@ -1051,7 +1051,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
             // Assert
             await action.Should()
-                .ThrowAsync<InvalidPermissionException>()
+                .ThrowAsync<DomainException>()
                 .WithMessage(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled.Message);
 
             _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Exactly(2));
@@ -1148,7 +1148,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
         public async Task CompleteAsync_Should_ThrowNotFoundException_WhenInvalidUserPerformendAction()
         {
             // Arrange
-            var targetTicket = TicketList().FirstOrDefault();            
+            var targetTicket = TicketList().FirstOrDefault();
             var idUserPerformedAction = int.MaxValue;
 
             _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
@@ -1173,7 +1173,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
         public async Task CompleteAsync_Should_ThrowNotFoundException_WhenInvalidTicketId()
         {
             // Arrange
-            var targetTicket = TicketList().FirstOrDefault();            
+            var targetTicket = TicketList().FirstOrDefault();
             var idUserPerformedAction = AnalystA.Id;
 
             _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
@@ -1301,7 +1301,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
 
-        [Fact]        
+        [Fact]
         public async Task CompleteAsync_Should_Return_WhenValidParameters()
         {
             // Arrange
@@ -1321,6 +1321,203 @@ namespace TechChallenge.Application.UnitTests.Scenarios
             targetTicket.CompletedAt.Should().NotBeNull();
             targetTicket.LastUpdatedBy.Should().Be(idUserPerformedAction);
             targetTicket.IdStatus.Should().Be((byte)TicketStatuses.Completed);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        #endregion
+
+        #region CancelAsync
+
+        [Fact]
+        public async Task CancelAsync_Should_ThrowNotFoundException_WhenInvalidUserPerformendAction()
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault();
+            var idUserPerformedAction = int.MaxValue;
+            var cancellationReason = "Lorem ipsum dolor sit amet.";
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            var action = () => ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            await action.Should()
+                .ThrowAsync<NotFoundException>()
+                .WithMessage(DomainErrors.User.NotFound.Message);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Never);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CancelAsync_Should_ThrowNotFoundException_WhenInvalidTicketId()
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault();
+            var idUserPerformedAction = AnalystA.Id;
+            var cancellationReason = "Lorem ipsum dolor sit amet.";
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+            _ticketRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Ticket)null);
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            var action = () => ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            await action.Should()
+                .ThrowAsync<NotFoundException>()
+                .WithMessage(DomainErrors.Ticket.NotFound.Message);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CancelAsync_Should_ThrowInvalidPermissionException_WhenUserPerformedActionIsGeneralAndNotUserRequester()
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault();
+            var idUserPerformedAction = UserB.Id;
+            var cancellationReason = "Lorem ipsum dolor sit amet.";
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+            _ticketRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(targetTicket);
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            var action = () => ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            await action.Should()
+                .ThrowAsync<InvalidPermissionException>()
+                .WithMessage(DomainErrors.Ticket.CannotBeCancelledByThisUser.Message);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CancelAsync_Should_ThrowInvalidPermissionException_WhenUserPerformedActionIsAnalystAndNotUserRequesterOrUserAssigned()
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault(x => x.IdStatus == (byte)TicketStatuses.Assigned);
+            var idUserPerformedAction = AnalystB.Id;
+            var cancellationReason = "Lorem ipsum dolor sit amet.";
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+            _ticketRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(targetTicket);
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            var action = () => ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            await action.Should()
+                .ThrowAsync<InvalidPermissionException>()
+                .WithMessage(DomainErrors.Ticket.CannotBeCancelledByThisUser.Message);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public async Task CancelAsync_Should_ThrowDomainException_WhenCancellationReasonIsNullOrWhiteSpace(string cancellationReason)
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault(x => x.IdStatus == (byte)TicketStatuses.Assigned);
+            var idUserPerformedAction = targetTicket.IdUserRequester;
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+            _ticketRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(targetTicket);
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            var action = () => ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            await action.Should()
+                .ThrowAsync<DomainException>()
+                .WithMessage(DomainErrors.Ticket.CancellationReasonIsRequired.Message);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(10_102 /*Completed Ticket*/)]
+        [InlineData(10_103 /*Cancelled Ticket*/)]
+        public async Task CancelAsync_Should_ThrowDomainException_WhenTicketStatusIsCompletedOrCancelled(int idTicket)
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault(x => x.Id == idTicket);
+            var idUserPerformedAction = targetTicket.IdUserRequester;
+            var cancellationReason = "Lorem ipsum dolor sit amet.";
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+            _ticketRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(targetTicket);
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            var action = () => ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            await action.Should()
+                .ThrowAsync<DomainException>()
+                .WithMessage(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled.Message);
+
+            _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CancelAsync_Should_Return_WhenValidParameters()
+        {
+            // Arrange
+            var targetTicket = TicketList().FirstOrDefault(x => x.IdStatus == (byte)TicketStatuses.Assigned);
+            var idUserPerformedAction = AnalystA.Id;
+            var cancellationReason = "Lorem ipsum dolor sit amet.";
+
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((int idUser) => UserList().FirstOrDefault(x => x.Id == idUser));
+            _ticketRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(targetTicket);
+
+            var ticketService = new TicketService(_dbContextMock.Object, _unitOfWorkMock.Object, _ticketRepositoryMock.Object,
+                _userRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            // Act
+            await ticketService.CancelAsync(targetTicket.Id, cancellationReason, idUserPerformedAction);
+
+            // Assert
+            targetTicket.CompletedAt.Should().BeNull();
+            targetTicket.CancellationReason.Should().Be(cancellationReason);
+            targetTicket.LastUpdatedBy.Should().Be(idUserPerformedAction);
+            targetTicket.IdStatus.Should().Be((byte)TicketStatuses.Cancelled);
 
             _userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
             _ticketRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);

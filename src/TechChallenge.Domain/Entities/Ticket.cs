@@ -70,7 +70,7 @@ namespace TechChallenge.Domain.Entities
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
             if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
-                throw new InvalidPermissionException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             IdCategory = category.Id;
             Description = description;
@@ -88,14 +88,14 @@ namespace TechChallenge.Domain.Entities
             if (userPerformedAction.IdRole == (byte)UserRoles.General)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
-            if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
-                throw new InvalidPermissionException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
-
             if (IdStatus == (byte)TicketStatuses.New && userPerformedAction.Id != userAssigned.Id && userPerformedAction.IdRole != (byte)UserRoles.Administrator)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
 
             if (IdUserAssigned != userPerformedAction.Id && userPerformedAction.IdRole != (byte)UserRoles.Administrator && IdStatus != (byte)TicketStatuses.New)
                 throw new InvalidPermissionException(DomainErrors.User.InvalidPermissions);
+
+            if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             IdUserAssigned = userAssigned.Id;
             LastUpdatedBy = userPerformedAction.Id;
@@ -117,7 +117,7 @@ namespace TechChallenge.Domain.Entities
                 throw new DomainException(DomainErrors.Ticket.CancellationReasonIsRequired);
 
             if (IdStatus == (byte)TicketStatuses.Completed || IdStatus == (byte)TicketStatuses.Cancelled)
-                throw new InvalidPermissionException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
+                throw new DomainException(DomainErrors.Ticket.HasAlreadyBeenCompletedOrCancelled);
 
             CancellationReason = cancellationReason;
             LastUpdatedBy = userPerformedAction.Id;
