@@ -424,7 +424,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
         [Theory]
         [InlineData(TicketStatuses.Completed)]
         [InlineData(TicketStatuses.Cancelled)]
-        public async Task AssignToMe_ReturnsForbidden_WhenCompletedOrCanceledTickets(TicketStatuses ticketStatuses)
+        public async Task AssignToMe_ReturnsBadRequest_WhenCompletedOrCanceledTickets(TicketStatuses ticketStatuses)
         {
             // Arrange
             var ticketFixtureResult = await _ticketFixture.SetFixtureAsync();
@@ -439,7 +439,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
                 .PostAsync();
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var responseContent = await response.ReadContentAsAsync<ApiErrorResponse>();
 
             responseContent.Should().NotBeNull();
@@ -626,7 +626,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
         [Theory]
         [InlineData(TicketStatuses.Completed)]
         [InlineData(TicketStatuses.Cancelled)]
-        public async Task Update_ReturnsForbidden_WhenCompletedOrCancelledTicket(TicketStatuses ticketStatus)
+        public async Task Update_ReturnsBadRequest_WhenCompletedOrCancelledTicket(TicketStatuses ticketStatus)
         {
             // Arrange
             var ticketFixtureResult = await _ticketFixture.SetFixtureAsync();
@@ -644,7 +644,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
                 .PutAsync();
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var responseContent = await response.ReadContentAsAsync<ApiErrorResponse>();
 
             responseContent.Should().NotBeNull();
@@ -842,7 +842,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
                 .PostAsync();
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var responseContent = await response.ReadContentAsAsync<ApiErrorResponse>();
 
             responseContent.Should().NotBeNull();
@@ -974,7 +974,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
         [Theory]
         [InlineData(TicketStatuses.Completed)]
         [InlineData(TicketStatuses.Cancelled)]
-        public async Task AssignTo_ReturnsForbidden_WhenCompletedOrCanceledTickets(TicketStatuses ticketStatuses)
+        public async Task AssignTo_ReturnsBadRequest_WhenCompletedOrCanceledTickets(TicketStatuses ticketStatuses)
         {
             // Arrange
             var ticketFixtureResult = await _ticketFixture.SetFixtureAsync();
@@ -992,7 +992,7 @@ namespace TechChallenge.Api.IntegrationTests.Scenarios
                 .PostAsync();
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var responseContent = await response.ReadContentAsAsync<ApiErrorResponse>();
 
             responseContent.Should().NotBeNull();
