@@ -20,7 +20,7 @@ namespace TechChallenge.Application.Contracts.Tickets
         /// <summary>
         /// Gets or sets the ticket category.
         /// </summary>
-        public CategoryReponse Category { get; set; }
+        public CategoryResponse Category { get; set; }
 
         /// <summary>
         /// Gets or sets the ticket status.

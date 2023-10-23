@@ -282,7 +282,7 @@ namespace TechChallenge.Application.UnitTests.Scenarios
 
             // Assert
             await action.Should()
-                .ThrowAsync<ArgumentException>();
+                .ThrowAsync<DomainException>();
 
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(default), Times.Never());
         }

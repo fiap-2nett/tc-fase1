@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using TechChallenge.Domain.Core.Primitives;
 
 namespace TechChallenge.Api.Contracts
@@ -20,6 +21,7 @@ namespace TechChallenge.Api.Contracts
         public ApiErrorResponse(params Error[] errors)
             => Errors = errors;
 
+        [JsonConstructor]
         public ApiErrorResponse(IReadOnlyCollection<Error> errors)
             => Errors = errors;
     }

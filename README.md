@@ -114,9 +114,9 @@ POST /authentication/register
 
 *Observação: para novos usuários será atribuído o perfil Geral.*
 
-### Testes unitários e arquiteturais
+### Testes unitários, integração e arquiteturais
 
-Para executar os testes unitários e arquiteturais através do dotnet CLI, no diretório raíz do projeto execute o seguinte comando:
+Para executar os testes através do dotnet CLI, no diretório raíz do projeto execute o seguinte comando:
 
 ```sh
 $ dotnet test TechChallenge.sln
@@ -127,3 +127,5 @@ Caso queria uma versão de resultado com mais detalhes, execute o seguinte coman
 ```sh
 $ dotnet test --logger "console;verbosity=detailed" TechChallenge.sln
 ```
+
+*Observação: para execução dos testes de integração é necessário ter uma instância do SQL Server em execução.*

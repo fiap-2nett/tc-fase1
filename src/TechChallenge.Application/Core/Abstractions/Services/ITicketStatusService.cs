@@ -9,7 +9,7 @@ namespace TechChallenge.Application.Core.Abstractions.Services
         #region ITicketStatusService Members
 
         Task<IEnumerable<StatusResponse>> GetAsync();
-        Task<StatusResponse> GetByIdAsync(int idTicketStatus);
+        Task<StatusResponse> GetByIdAsync(byte idTicketStatus);
 
         #endregion
     }

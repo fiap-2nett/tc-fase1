@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TechChallenge.Application.Contracts.Common
 {
@@ -46,6 +47,7 @@ namespace TechChallenge.Application.Contracts.Common
 
         #region Constructors
 
+        [JsonConstructor]
         public PagedList(IEnumerable<TResponse> items, int page, int pageSize, int totalCount)
         {
             Page = page;

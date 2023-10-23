@@ -1,8 +1,8 @@
 namespace TechChallenge.Application.Contracts.Category
 {
-    public sealed class PriorityResponse
+    public sealed class CategoryResponse
     {
-        public int IdPriority { get; set; }
+        public int IdCategory { get; set; }
         public string Name { get; set; }
     }
 }

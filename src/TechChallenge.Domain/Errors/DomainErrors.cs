@@ -81,6 +81,14 @@ namespace TechChallenge.Domain.Errors
             public static Error CannotChangePassword => new Error(
                 "User.CannotChangePassword",
                 "The password cannot be changed to the specified password.");
+
+            public static Error NameIsRequired = new Error(
+                "User.NameIsRequired",
+                "The user name is required.");
+
+            public static Error SurnameIsRequired = new Error(
+                "User.SurnameIsRequired",
+                "The user surname is required.");
         }
 
         public static class Ticket
