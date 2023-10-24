@@ -61,7 +61,7 @@ A solução do HelpDesk API é composta pelos seguintes projetos:
 A HelpDesk API utiliza o paradigma de CodeFirst através dos recursos disponibilizados pelo Entity Framework, no entanto para melhor
 entendimento da modelagem de dados apresentamos a seguir o MER e suas respectivas definições:
 
-![image](https://github.com/fiap-2nett/tc-fase1/assets/57924071/5471b1a1-d991-467f-be6e-785f6bb74211)
+![image](https://github.com/fiap-2nett/tc-fase1/assets/57924071/99d35a0b-96b5-40fb-87f2-8c1c18776bd6)
 
 Com base na imagem acima iremos detalhar as tabelas e os dados contidos em cada uma delas:
 
