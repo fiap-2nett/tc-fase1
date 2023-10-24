@@ -14,6 +14,12 @@ atualização do seu andamento.
 - [Cesar Julio Spaziante](https://www.linkedin.com/in/cesar-spaziante/) - RM351311
 - [Paulo Felipe do Nascimento de Sousa](https://www.linkedin.com/in/paulo-felipe06/) - RM351707
 
+## Documentação de Requisitos
+
+A documentação detalhada de Requisitos Funcionais (RF) e Não Funcionais (RNF) pode ser encontrada na Wiki oficial do projeto. Vide link abaixo.:
+
+[Wiki Oficial HelpDesk API](https://github.com/fiap-2nett/tc-fase1/wiki)
+
 ## Tecnologias utilizadas
 
 - .NET 7.0
